@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+	<title>Rides - driver : Test Driver</title>
+	<style>
+body {
+	font-family: Arial, sans-serif;
+	text-align: center;
+	margin-top: 40px;
+}
+
+.panel {
+	margin: auto;
+	width: 400px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.title {
+	font-weight: bold;
+	font-size: 18px;
+	margin: 20px;
+}
+
+.section {
+	background-color: #e0ecf8;
+	padding: 20px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.lang {
+	margin: 20px;
+}
+
+
+</style>
+</h:head>
+<h:body>
+	<div class="panel">
+		<div class="title">Select Option</div>
+
+		<div class="section">
+			<h:form>
+				<h:commandButton value="Create Ride" action="#{indexBean.createRide()}">Create Ride</h:commandButton>
+			</h:form>
+		</div>
+
+		<div class="section">
+			<h:outputText value="Query Rides">Query Rides</h:outputText> 
+		</div>
+
+		<div class="lang">
+			<h:form>
+				<h:selectOneRadio value="#{indexBean.language}">
+					<!--  <f:selectItem itemLabel="Euskara" itemValue="eu" />
+                    <f:selectItem itemLabel="Castellano" itemValue="es" />
+                    <f:selectItem itemLabel="English" itemValue="en" />-->
+				</h:selectOneRadio>
+			</h:form>
+		</div>
+	</div>
+</h:body>
+</html>
