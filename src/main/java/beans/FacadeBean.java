@@ -21,7 +21,7 @@ public class FacadeBean {
     }
     
     public static BLFacade getBusinessLogic() {
-        if (facadeInterface == null) {
+    	if (facadeInterface == null) {
             throw new RuntimeException("FacadeBean: negozioaren logika sortzean errorea: NULL");
         }
         return facadeInterface;
