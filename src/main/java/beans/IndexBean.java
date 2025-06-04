@@ -4,20 +4,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 
-@ManagedBean(name = "index")
+@ManagedBean(name = "indexBean")
 @SessionScoped
 public class IndexBean implements Serializable {
-    private String language;
 
-    public void createRide() {
+    public String createRide() {
         System.out.println("Create Ride clicked");
+        return "create";
     }
     
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
+    public String queryRides() {
+    	System.out.println("Query Rides clicked");
+    	return "query";
     }
 }

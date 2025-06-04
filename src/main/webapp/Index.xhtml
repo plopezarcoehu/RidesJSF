@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<title>Rides - driver : Test Driver</title>
 	<style>
@@ -33,30 +35,33 @@ body {
 .lang {
 	margin: 20px;
 }
-
-
 </style>
 </h:head>
 <h:body>
 	<div class="panel">
-		<div class="title">Select Option</div>
+		<div class="title">
+			<h:outputText value="#{msg['SelectOption']}" />
+		</div>
 
 		<div class="section">
 			<h:form>
-				<h:commandButton value="Create Ride" action="#{indexBean.createRide()}">Create Ride</h:commandButton>
+				<h:commandButton value="#{msg['CreateRide']}" action="#{indexBean.createRide}" />
+
 			</h:form>
 		</div>
 
 		<div class="section">
-			<h:outputText value="Query Rides">Query Rides</h:outputText> 
+			<h:form>
+				<h:commandButton value="#{msg['QueryRides']}" action="#{indexBean.queryRides}" />
+			</h:form>
 		</div>
 
 		<div class="lang">
 			<h:form>
-				<h:selectOneRadio value="#{indexBean.language}">
-					<!--  <f:selectItem itemLabel="Euskara" itemValue="eu" />
-                    <f:selectItem itemLabel="Castellano" itemValue="es" />
-                    <f:selectItem itemLabel="English" itemValue="en" />-->
+				<h:selectOneRadio value="#{localeBean.language}" onchange="submit()">
+					<f:selectItem itemLabel="Euskara" itemValue="eu" />
+					<f:selectItem itemLabel="Castellano" itemValue="es" />
+					<f:selectItem itemLabel="English" itemValue="en" />
 				</h:selectOneRadio>
 			</h:form>
 		</div>
