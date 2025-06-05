@@ -2,12 +2,52 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
 <h:head>
+	<title><h:outputText value="#{msg['CreateRide']}" /></title>
 </h:head>
-<body>
+<h:body>
 	<h1>
 		<h:outputText value="#{msg['CreateRide']}" />
 	</h1>
-</body>
+
+	<h:form id="createRideForm">
+
+		<h:outputLabel for="departCity" value="#{msg['LeavingFrom']}:" />
+		<h:inputText id="departCity" value="#{createBean.departCity}"
+			required="true" />
+		<br />
+		
+		<h:outputLabel for="destCity" value="#{msg['GoingTo']}:" />
+		<h:inputText id="destCity" value="#{createBean.destCity}"
+			required="true" />
+		<br />
+		
+		<h:outputLabel for="nPlaces" value="#{msg['NumberOfSeats']}:" />
+		<h:inputText id="nPlaces" value="#{createBean.NPlaces}"
+			required="true"
+			validatorMessage="#{msg['SeatsMustBeGreaterThan0']}">
+		</h:inputText>
+		<br />
+		
+		<h:outputLabel for="price" value="#{msg['Price']}:" />
+		<h:inputText id="price" value="#{createBean.price}"
+			required="true" validatorMessage="#{msg['PriceMustBeGreaterThan0']}">
+		</h:inputText>
+		<br />
+		
+		<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
+		<p:calendar id="rideDate" value="#{createBean.rideDate}"
+			pattern="yyyy-MM-dd" required="true" mode="inline" />
+
+		<br />
+		<p:commandButton value="#{msg['CreateRide']}"
+			action="#{createBean.createRide}"  update=":createRideForm" />
+			
+		<h:messages style="color:red;" globalOnly="false" />
+		
+	</h:form>
+</h:body>
 </html>

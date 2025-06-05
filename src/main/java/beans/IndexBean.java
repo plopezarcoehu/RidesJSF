@@ -9,12 +9,10 @@ import java.io.Serializable;
 public class IndexBean implements Serializable {
 
     public String createRide() {
-        System.out.println("Create Ride clicked");
         return "create";
     }
     
     public String queryRides() {
-    	System.out.println("Query Rides clicked");
     	return "query";
     }
 }
