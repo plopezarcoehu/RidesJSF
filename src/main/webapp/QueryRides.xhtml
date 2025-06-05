@@ -2,9 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<title><h:outputText value="#{msg['QueryRides']}" /></title>
+	<style>
+.highlighted-day a {
+	background-color: #cdeaff !important;
+	color: #004085 !important;
+	border-radius: 50% !important;
+}
+</style>
 </h:head>
 <h:body>
 	<h1>
@@ -30,14 +38,39 @@
 
 		<br />
 		<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
-		<h:selectOneMenu id="rideDate" value="#{queryBean.rideDate}"
-			required="true">
-			<f:selectItems value="#{queryBean.datesWithRides}"/>
-		</h:selectOneMenu>
 
 
-		<h:commandButton value="Submit" action="#{queryBean.search}" />
+		<p:calendar id="rideDate" value="#{queryBean.rideDate}" mode="inline">
+			<p:ajax event="dateSelect" listener="#{queryBean.findRides}" update=":rideForm:ridesTable" />
+		</p:calendar>
+
+		<p:dataTable id="ridesTable" value="#{queryBean.rides}" var="ride"
+			rendered="true" emptyMessage="#{msg['NoRides']}">
+			<p:column headerText="#{msg['Driver']}">
+				<h:outputText value="#{ride.driver.name}" />
+			</p:column>
+			<p:column headerText="#{msg['Price']}">
+				<h:outputText value="#{ride.price}" />
+			</p:column>
+			<p:column headerText="#{msg['NPlaces']}">
+				<h:outputText value="#{ride.nPlaces}" />
+			</p:column>
+		</p:dataTable>
+
+		<h:messages globalOnly="false" layout="table" style="color:red;" />
 
 	</h:form>
 </h:body>
+
+<h:outputScript>
+    var rideDates = #{queryBean.datesWithRides};
+
+    function highlightRideDates(date) {
+        var d = $.datepicker.formatDate('yy-mm-dd', date);
+        if (rideDates.indexOf(d) !== -1) {
+            return [true, 'highlighted-day'];
+        }
+        return [true, '', ''];
+    }
+</h:outputScript>
 </html>

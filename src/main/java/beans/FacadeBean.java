@@ -12,7 +12,6 @@ public class FacadeBean {
     private FacadeBean() {
         try {
             facadeInterface = new BLFacadeImplementation(new DataAccess());
-            System.out.println("FacadeBean Logic correct");
         } catch (Exception e) {
         	System.out.println("FacadeBean: negozioaren logika sortzean errorea: "+ e.getMessage());
             e.printStackTrace();
@@ -23,19 +22,7 @@ public class FacadeBean {
     public static BLFacade getBusinessLogic() {
     	if (facadeInterface == null) {
             throw new RuntimeException("FacadeBean: negozioaren logika sortzean errorea: NULL");
-        }
+        }	
         return facadeInterface;
-    }
-    
-    public static boolean isInitialized() {
-        return facadeInterface != null;
-    }
-    
-    public static void reinitialize() {
-    	try {
-            facadeInterface = new BLFacadeImplementation(new DataAccess());
-        } catch (Exception e) {
-            facadeInterface = null;
-        }
     }
 }

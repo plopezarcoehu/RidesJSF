@@ -7,6 +7,7 @@ import businessLogic.BLFacade;
 import domain.Ride;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,12 +21,12 @@ public class QueryRidesBean implements Serializable {
 	private String departCity;
 	private String destCity;
 	private Date rideDate;
-
-	private static BLFacade facadeBL;
+	
+	private BLFacade facadeBL;
 
 	private List<String> departCities;
-
-	private List<Ride> ridesOnSelectedDate;
+		
+	private List<Ride> rides;
 
 	public QueryRidesBean() {
 		facadeBL = FacadeBean.getBusinessLogic();
@@ -54,9 +55,20 @@ public class QueryRidesBean implements Serializable {
 	public void setRideDate(Date rideDate) {
 		this.rideDate = rideDate;
 	}
+	
+	public List<Ride> getRides() {
+		return rides;
+	}
+
+	public void setRides(List<Ride> rides) {
+		this.rides = rides;
+	}
 
 	public List<String> getDepartCities() {
-		departCities = facadeBL.getDepartCities();
+		
+		if(facadeBL != null) {
+			departCities = facadeBL.getDepartCities();
+		}
 		return departCities;
 	}
 
@@ -69,7 +81,7 @@ public class QueryRidesBean implements Serializable {
 		return destCities;
 	}
 
-	public List<Date> getDatesWithRides() {
+	public List<String> getDatesWithRides() {
 		List<Date> datesWithRides;
 		if (departCity == null && !departCities.isEmpty()) {
 			departCity = departCities.get(0);
@@ -77,20 +89,23 @@ public class QueryRidesBean implements Serializable {
 		if (destCity == null && getDestCities() != null) {
 			destCity = getDestCities().get(0);
 		}
-		System.out.println("from:" + departCity + "to: " + destCity);
-		System.out.println("date:" + Calendar.getInstance().getTime());
 		datesWithRides = facadeBL.getThisMonthDatesWithRides(departCity, destCity, Calendar.getInstance().getTime());
-		return datesWithRides;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<String> rideDates = new ArrayList<>();
+		for(Date d: datesWithRides) {
+			rideDates.add(sdf.format(d));
+		}
+		return rideDates;
 	}
 
-	public List<Ride> search() {
-		System.out.println(rideDate);
+	public String findRides() {
 		if (rideDate != null && departCity != null && destCity != null) {
-			System.out.println(rideDate);
-			ridesOnSelectedDate = facadeBL.getRides(departCity, destCity, rideDate);
+			System.out.println("RIDE DATE: " + rideDate);
+			Date date = rideDate;
+			rides = facadeBL.getRides(departCity, destCity, date);
 		}
-		System.out.println(ridesOnSelectedDate);
-		return ridesOnSelectedDate;
+		System.out.println("ALL RIDES ---------------------------------------- " + rides);
+		return null;
 	}
 
 }
