@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -22,12 +23,12 @@ public class QueryRidesBean implements Serializable {
 	private String departCity;
 	private String destCity;
 	private Date rideDate;
-	
+
 	private BLFacade facadeBL;
 
 	private List<String> departCities;
 	private List<String> destCities;
-		
+	private List<String> datesWithRides;
 	private List<Ride> rides;
 
 	public QueryRidesBean() {
@@ -57,7 +58,7 @@ public class QueryRidesBean implements Serializable {
 	public void setRideDate(Date rideDate) {
 		this.rideDate = rideDate;
 	}
-	
+
 	public List<Ride> getRides() {
 		return rides;
 	}
@@ -67,7 +68,7 @@ public class QueryRidesBean implements Serializable {
 	}
 
 	public List<String> getDepartCities() {
-		if(facadeBL != null) {
+		if (facadeBL != null) {
 			departCities = facadeBL.getDepartCities();
 		}
 		return departCities;
@@ -78,40 +79,47 @@ public class QueryRidesBean implements Serializable {
 			departCity = departCities.get(0);
 		}
 		destCities = facadeBL.getDestinationCities(departCity);
-		destCity = destCities.get(0);
+		System.out.println(destCities);
+		
+		if (destCities != null && !destCities.isEmpty()) {
+			destCity = destCities.get(0);
+			getDatesWithRides();
+		}
+		
 		return destCities;
 	}
 
-	public List<String> getDatesWithRides() {
-		List<Date> datesWithRides;
+	public String getDatesWithRides() {
+		List<Date> dates;
 		if (departCity == null && !departCities.isEmpty()) {
 			departCity = departCities.get(0);
 		}
 		if (destCity == null && getDestCities() != null) {
 			destCity = getDestCities().get(0);
 		}
-		datesWithRides = facadeBL.getThisMonthDatesWithRides(departCity, destCity, Calendar.getInstance().getTime());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		List<String> rideDates = new ArrayList<>();
-		for(Date d: datesWithRides) {
-			rideDates.add(sdf.format(d));
+		dates = facadeBL.getThisMonthDatesWithRides(departCity, destCity, Calendar.getInstance().getTime());
+		if(dates == null) {
+			datesWithRides.clear();
+			return null;
 		}
-		return rideDates;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Collections.sort(dates);
+		datesWithRides = new ArrayList<>();
+		for (Date d : dates) {
+			datesWithRides.add(sdf.format(d));
+		}	
+		
+		System.out.println("DATES: " + datesWithRides);
+		return String.join(",", datesWithRides);
 	}
 
-	
 	public void findRidesListener(AjaxBehaviorEvent event) {
-        System.out.println("Método findRides() llamado. Fecha seleccionada: " + rideDate);
-        
-        findRides();
-    }
-	
+		getDatesWithRides();
+		findRides();
+	}
+
 	public String findRides() {
 		if (rideDate != null && departCity != null && destCity != null) {
-			if(departCity.equals(destCity) ) {
-				// Oraindik hiriak aldatu ez badira
-				destCity = getDestCities().get(0);
-			}
 			System.out.println("RIDE DATE: " + rideDate);
 			Date date = rideDate;
 			rides = facadeBL.getRides(departCity, destCity, date);
@@ -120,21 +128,14 @@ public class QueryRidesBean implements Serializable {
 		return null;
 	}
 
-	
 	public void onDepartCityChange(AjaxBehaviorEvent event) {
-	    if (departCity != null) {
-	        destCities = getDestCities();
+		if (departCity != null) {
+			destCities = getDestCities();
 
-	        if (destCities != null && !destCities.isEmpty()) {
-	            destCity = destCities.get(0);
-	        } else {
-	            destCity = null;
-	        }
-
-	        if (rideDate != null && destCity != null) {
-	            findRides();
-	        }
-	    }
+			if (rideDate != null && destCity != null) {
+				findRides();
+			}
+		}
 	}
 
 }

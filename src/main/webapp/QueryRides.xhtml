@@ -7,10 +7,10 @@
 <h:head>
 	<title><h:outputText value="#{msg['FindRides']}" /></title>
 	<style>
-.highlighted-day a {
-	background-color: #cdeaff !important;
-	color: #004085 !important;
-	border-radius: 50% !important;
+.available-ride-date {
+	background-color: #28a745 !important;
+	color: white !important;
+	font-weight: bold;
 }
 </style>
 </h:head>
@@ -27,7 +27,7 @@
 			required="true">
 			<f:selectItems value="#{queryBean.departCities}" />
 			<f:ajax event="change" listener="#{queryBean.onDepartCityChange}"
-				render="arrivalCity :rideForm:ridesTable" />
+				render="arrivalCity datesWithRides :rideForm:ridesTable"  />
 		</h:selectOneMenu>
 
 		<br />
@@ -36,20 +36,23 @@
 			required="true">
 			<f:selectItems value="#{queryBean.destCities}" />
 			<f:ajax event="change" listener="#{queryBean.findRidesListener}"
-				render=":rideForm:ridesTable" />
+				render=":rideForm:ridesTable datesWithRides" />
 		</h:selectOneMenu>
 
 		<br />
 		<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
-
+		
 		<p:calendar id="rideDate" value="#{queryBean.rideDate}" mode="inline"
-			pattern="yyyy-MM-dd">
+			pattern="yyyy-MM-dd" onMonthChange="styleAvailableDates" onYearChange="styleAvailableDates">
 			<p:ajax event="dateSelect" listener="#{queryBean.findRidesListener}"
 				update="ridesTable" process="@form" />
 		</p:calendar>
+		
+		<h:outputText id="datesWithRides" value="#{queryBean.datesWithRides}"/>
 
 		<p:dataTable id="ridesTable" value="#{queryBean.rides}" var="ride"
-			rendered="true" emptyMessage="#{msg['NoRides']}" locale="#{localeBean.language}">
+			rendered="true" emptyMessage="#{msg['NoRides']}"
+			locale="#{localeBean.language}">
 			<p:column headerText="#{msg['Driver']}">
 				<h:outputText value="#{ride.driver.name}" />
 			</p:column>
@@ -66,4 +69,51 @@
 
 	</h:form>
 </h:body>
+<h:outputScript>
+$(document).ready(function() {
+    styleAvailableDates();
+});
+
+    function styleAvailableDates() {
+	    var availableDates = #{ queryBean.datesWithRides };
+		
+	    $('.ui-datepicker-calendar td').each(function () {
+	    	
+	        var $cell = $(this);
+	        
+	        
+	        var day = $cell.text();
+	        var currentMonth = $('.ui-datepicker-month').text();
+	        var currentYear = $('.ui-datepicker-year').text();
+	        var dateStr = currentYear + '-' + getMonth(currentMonth) + '-' + day.padStart(2, '0');
+			
+			console.log(dateStr);
+	        if (availableDates.includes(dateStr)) {
+	        	console.log("ESTA SI");
+	            $cell.addClass('available-ride-date');
+	        }
+	    });
+	    return [true, '', ''];
+	}
+	
+	function getMonth(month){
+	const months = {
+        "january": '01',
+        "february": '02',
+        "march": '03',
+        "april": '04',
+        "may": '05',
+        "june": '06',
+        "july": '07',
+        "august": '08',
+        "september": '09',
+        "october": '10',
+        "november": '11',
+        "december": '12'
+    };
+
+    if (!month) return null;
+    return months[month.toLowerCase()] || null;
+    }
+</h:outputScript>
 </html>

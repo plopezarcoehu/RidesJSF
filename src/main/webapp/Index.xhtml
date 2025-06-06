@@ -38,6 +38,8 @@ body {
 </style>
 </h:head>
 <h:body>
+	<f:view locale="#{localeBean.language}" />
+
 	<div class="panel">
 		<div class="title">
 			<h:outputText value="#{msg['SelectOption']}" />
@@ -45,14 +47,16 @@ body {
 
 		<div class="section">
 			<h:form>
-				<h:commandButton value="#{msg['CreateRide']}" action="#{indexBean.createRide}" />
+				<h:commandButton value="#{msg['CreateRide']}"
+					action="#{indexBean.createRide}" />
 
 			</h:form>
 		</div>
 
 		<div class="section">
 			<h:form>
-				<h:commandButton value="#{msg['QueryRides']}" action="#{indexBean.queryRides}" />
+				<h:commandButton value="#{msg['QueryRides']}"
+					action="#{indexBean.queryRides}" />
 			</h:form>
 		</div>
 

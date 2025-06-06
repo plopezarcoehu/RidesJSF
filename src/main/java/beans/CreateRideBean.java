@@ -1,6 +1,5 @@
 package beans;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 
@@ -10,6 +9,7 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 
 import businessLogic.BLFacade;
+import domain.Ride;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
@@ -76,7 +76,13 @@ public class CreateRideBean implements Serializable {
 
 	public void createRide() {
 		try {
-			facadeBL.createRide(departCity, destCity, rideDate, nPlaces, price, departCity);
+			Ride r = facadeBL.createRide(departCity, destCity, rideDate, nPlaces, price, "driver1@gmail.com");
+			if (r != null) {
+				addGlobalMessage("RideCreated");
+			}else {
+				addGlobalMessage("ErrorQuery");
+			}
+			System.out.println("NEW RIDE: " + r);
 		} catch (RideAlreadyExistException e) {
 			addGlobalMessage("RideAlreadyExist");
 		} catch (RideMustBeLaterThanTodayException e) {
@@ -136,11 +142,11 @@ public class CreateRideBean implements Serializable {
 		ResourceBundle bundle = context.getApplication().getResourceBundle(context, "msg");
 		return bundle.getString(key);
 	}
-	
+
 	private void addGlobalMessage(String messageKey) {
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    String mensaje = getMessage(messageKey);
-	    FacesMessage message = new FacesMessage(mensaje);
-	    context.addMessage(null, message);
+		FacesContext context = FacesContext.getCurrentInstance();
+		String mensaje = getMessage(messageKey);
+		FacesMessage message = new FacesMessage(mensaje);
+		context.addMessage(null, message);
 	}
 }
