@@ -15,6 +15,7 @@
 </style>
 </h:head>
 <h:body>
+	<f:view locale="#{localeBean.language}" />
 	<h1>
 		<h:outputText value="#{msg['QueryRides']}" />
 	</h1>
@@ -25,7 +26,7 @@
 		<h:selectOneMenu id="departureCity" value="#{queryBean.departCity}"
 			required="true">
 			<f:selectItems value="#{queryBean.departCities}" />
-			<f:ajax event="change" listener="#{queryBean.findRidesListener}"
+			<f:ajax event="change" listener="#{queryBean.onDepartCityChange}"
 				render="arrivalCity :rideForm:ridesTable" />
 		</h:selectOneMenu>
 
@@ -35,20 +36,20 @@
 			required="true">
 			<f:selectItems value="#{queryBean.destCities}" />
 			<f:ajax event="change" listener="#{queryBean.findRidesListener}"
-				render="rideDate :rideForm:ridesTable" />
+				render=":rideForm:ridesTable" />
 		</h:selectOneMenu>
 
 		<br />
 		<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
 
-
-		<p:calendar id="rideDate" value="#{queryBean.rideDate}" mode="inline">
-			<p:ajax event="dateSelect" listener="#{queryBean.findRides}"
-				update=":rideForm:ridesTable" />
+		<p:calendar id="rideDate" value="#{queryBean.rideDate}" mode="inline"
+			pattern="yyyy-MM-dd">
+			<p:ajax event="dateSelect" listener="#{queryBean.findRidesListener}"
+				update="ridesTable" process="@form" />
 		</p:calendar>
 
 		<p:dataTable id="ridesTable" value="#{queryBean.rides}" var="ride"
-			rendered="true" emptyMessage="#{msg['NoRides']}">
+			rendered="true" emptyMessage="#{msg['NoRides']}" locale="#{localeBean.language}">
 			<p:column headerText="#{msg['Driver']}">
 				<h:outputText value="#{ride.driver.name}" />
 			</p:column>
@@ -65,16 +66,4 @@
 
 	</h:form>
 </h:body>
-
-<h:outputScript>
-    var rideDates = #{queryBean.datesWithRides};
-
-    function highlightRideDates(date) {
-        var d = $.datepicker.formatDate('yy-mm-dd', date);
-        if (rideDates.indexOf(d) !== -1) {
-            return [true, 'highlighted-day'];
-        }
-        return [true, '', ''];
-    }
-</h:outputScript>
 </html>

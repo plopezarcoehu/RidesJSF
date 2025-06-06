@@ -32,7 +32,6 @@ public class QueryRidesBean implements Serializable {
 
 	public QueryRidesBean() {
 		facadeBL = FacadeBean.getBusinessLogic();
-		rideDate = new Date();
 	}
 
 	public String getDepartCity() {
@@ -68,7 +67,6 @@ public class QueryRidesBean implements Serializable {
 	}
 
 	public List<String> getDepartCities() {
-		
 		if(facadeBL != null) {
 			departCities = facadeBL.getDepartCities();
 		}
@@ -110,7 +108,7 @@ public class QueryRidesBean implements Serializable {
 	
 	public String findRides() {
 		if (rideDate != null && departCity != null && destCity != null) {
-			if(departCity.equals(destCity)) {
+			if(departCity.equals(destCity) ) {
 				// Oraindik hiriak aldatu ez badira
 				destCity = getDestCities().get(0);
 			}
@@ -120,6 +118,23 @@ public class QueryRidesBean implements Serializable {
 		}
 		System.out.println("ALL RIDES ---------------------------------------- " + rides);
 		return null;
+	}
+
+	
+	public void onDepartCityChange(AjaxBehaviorEvent event) {
+	    if (departCity != null) {
+	        destCities = getDestCities();
+
+	        if (destCities != null && !destCities.isEmpty()) {
+	            destCity = destCities.get(0);
+	        } else {
+	            destCity = null;
+	        }
+
+	        if (rideDate != null && destCity != null) {
+	            findRides();
+	        }
+	    }
 	}
 
 }
