@@ -2,6 +2,7 @@ package beans;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import businessLogic.BLFacade;
 import domain.Ride;
@@ -25,11 +26,13 @@ public class QueryRidesBean implements Serializable {
 	private BLFacade facadeBL;
 
 	private List<String> departCities;
+	private List<String> destCities;
 		
 	private List<Ride> rides;
 
 	public QueryRidesBean() {
 		facadeBL = FacadeBean.getBusinessLogic();
+		rideDate = new Date();
 	}
 
 	public String getDepartCity() {
@@ -73,11 +76,11 @@ public class QueryRidesBean implements Serializable {
 	}
 
 	public List<String> getDestCities() {
-		List<String> destCities;
 		if (departCity == null && !departCities.isEmpty()) {
 			departCity = departCities.get(0);
 		}
 		destCities = facadeBL.getDestinationCities(departCity);
+		destCity = destCities.get(0);
 		return destCities;
 	}
 
@@ -98,8 +101,19 @@ public class QueryRidesBean implements Serializable {
 		return rideDates;
 	}
 
+	
+	public void findRidesListener(AjaxBehaviorEvent event) {
+        System.out.println("Método findRides() llamado. Fecha seleccionada: " + rideDate);
+        
+        findRides();
+    }
+	
 	public String findRides() {
 		if (rideDate != null && departCity != null && destCity != null) {
+			if(departCity.equals(destCity)) {
+				// Oraindik hiriak aldatu ez badira
+				destCity = getDestCities().get(0);
+			}
 			System.out.println("RIDE DATE: " + rideDate);
 			Date date = rideDate;
 			rides = facadeBL.getRides(departCity, destCity, date);

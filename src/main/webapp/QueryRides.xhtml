@@ -25,7 +25,8 @@
 		<h:selectOneMenu id="departureCity" value="#{queryBean.departCity}"
 			required="true">
 			<f:selectItems value="#{queryBean.departCities}" />
-			<f:ajax render="arrivalCity" />
+			<f:ajax event="change" listener="#{queryBean.findRidesListener}"
+				render="arrivalCity :rideForm:ridesTable" />
 		</h:selectOneMenu>
 
 		<br />
@@ -33,7 +34,8 @@
 		<h:selectOneMenu id="arrivalCity" value="#{queryBean.destCity}"
 			required="true">
 			<f:selectItems value="#{queryBean.destCities}" />
-			<f:ajax render="rideDate" />
+			<f:ajax event="change" listener="#{queryBean.findRidesListener}"
+				render="rideDate :rideForm:ridesTable" />
 		</h:selectOneMenu>
 
 		<br />
@@ -41,7 +43,8 @@
 
 
 		<p:calendar id="rideDate" value="#{queryBean.rideDate}" mode="inline">
-			<p:ajax event="dateSelect" listener="#{queryBean.findRides}" update=":rideForm:ridesTable" />
+			<p:ajax event="dateSelect" listener="#{queryBean.findRides}"
+				update=":rideForm:ridesTable" />
 		</p:calendar>
 
 		<p:dataTable id="ridesTable" value="#{queryBean.rides}" var="ride"
@@ -56,6 +59,7 @@
 				<h:outputText value="#{ride.nPlaces}" />
 			</p:column>
 		</p:dataTable>
+
 
 		<h:messages globalOnly="false" layout="table" style="color:red;" />
 
