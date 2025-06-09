@@ -2,7 +2,7 @@ package beans;
 
 import businessLogic.BLFacade;
 import businessLogic.BLFacadeImplementation;
-import dataAccess.DataAccess;
+import dataAccess.HibernateDataAccess;
 
 public class FacadeBean {
     
@@ -11,7 +11,7 @@ public class FacadeBean {
     
     private FacadeBean() {
         try {
-            facadeInterface = new BLFacadeImplementation(new DataAccess());
+            facadeInterface = new BLFacadeImplementation(new HibernateDataAccess());
         } catch (Exception e) {
         	System.out.println("FacadeBean: negozioaren logika sortzean errorea: "+ e.getMessage());
             e.printStackTrace();

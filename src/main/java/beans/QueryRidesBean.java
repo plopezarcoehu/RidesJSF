@@ -8,7 +8,6 @@ import businessLogic.BLFacade;
 import domain.Ride;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
