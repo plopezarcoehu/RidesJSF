@@ -6,55 +6,50 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name="ride")
+@Table(name = "ride")
 public class Ride implements Serializable {
 
-	@Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer rideNumber;
-	
-	private String from;
-	private String to;
+
+	private String fromCity;
+	private String toCity;
 	private int nPlaces;
 	private Date date;
 	private float price;
-	
-	@ManyToOne
-    @JoinColumn(name = "driver_email",
-                referencedColumnName = "email",
-                nullable = false,
-                foreignKey = @javax.persistence.ForeignKey(name = "FK_RIDE_DRIVER"))
-	private Driver driver;  
-	
-	public Ride(){
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "driver_email", referencedColumnName = "email", nullable = false)
+	private Driver driver;
+
+	public Ride() {
 		super();
 	}
-	
+
 	public Ride(Integer rideNumber, String from, String to, Date date, int nPlaces, float price, Driver driver) {
 		super();
 		this.rideNumber = rideNumber;
-		this.from = from;
-		this.to = to;
+		this.fromCity = from;
+		this.toCity = to;
 		this.nPlaces = nPlaces;
-		this.date=date;
-		this.price=price;
+		this.date = date;
+		this.price = price;
 		this.driver = driver;
 	}
 
-	
-
-	public Ride(String from, String to,  Date date, int nPlaces, float price, Driver driver) {
+	public Ride(String from, String to, Date date, int nPlaces, float price, Driver driver) {
 		super();
-		this.from = from;
-		this.to = to;
+		this.fromCity = from;
+		this.toCity = to;
 		this.nPlaces = nPlaces;
-		this.date=date;
-		this.price=price;
+		this.date = date;
+		this.price = price;
 		this.driver = driver;
 	}
-	
+
 	/**
-	 * Get the  number of the ride
+	 * Get the number of the ride
 	 * 
 	 * @return the ride number
 	 */
@@ -62,56 +57,53 @@ public class Ride implements Serializable {
 		return rideNumber;
 	}
 
-	
 	/**
 	 * Set the ride number to a ride
 	 * 
-	 * @param ride Number to be set	 */
-	
+	 * @param ride Number to be set
+	 */
+
 	public void setRideNumber(Integer rideNumber) {
 		this.rideNumber = rideNumber;
 	}
 
-
 	/**
-	 * Get the origin  of the ride
+	 * Get the origin of the ride
 	 * 
 	 * @return the origin location
 	 */
 
-	public String getFrom() {
-		return from;
+	public String getFromCity() {
+		return fromCity;
 	}
-
 
 	/**
 	 * Set the origin of the ride
 	 * 
 	 * @param origin to be set
-	 */	
-	
-	public void setFrom(String origin) {
-		this.from = origin;
+	 */
+
+	public void getFromCity(String origin) {
+		this.fromCity = origin;
 	}
 
 	/**
-	 * Get the destination  of the ride
+	 * Get the destination of the ride
 	 * 
 	 * @return the destination location
 	 */
 
-	public String getTo() {
-		return to;
+	public String getToCity() {
+		return toCity;
 	}
-
 
 	/**
 	 * Set the origin of the ride
 	 * 
 	 * @param destination to be set
-	 */	
-	public void setTo(String destination) {
-		this.to = destination;
+	 */
+	public void setToCity(String destination) {
+		this.toCity = destination;
 	}
 
 	/**
@@ -119,25 +111,25 @@ public class Ride implements Serializable {
 	 * 
 	 * @return the available places
 	 */
-	
+
 	/**
-	 * Get the date  of the ride
+	 * Get the date of the ride
 	 * 
-	 * @return the ride date 
+	 * @return the ride date
 	 */
 	public Date getDate() {
 		return date;
 	}
+
 	/**
 	 * Set the date of the ride
 	 * 
 	 * @param date to be set
-	 */	
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
-	
 	public float getnPlaces() {
 		return nPlaces;
 	}
@@ -145,7 +137,7 @@ public class Ride implements Serializable {
 	/**
 	 * Set the free places of the ride
 	 * 
-	 * @param  nPlaces places to be set
+	 * @param nPlaces places to be set
 	 */
 
 	public void setnPlaces(int nPlaces) {
@@ -178,14 +170,8 @@ public class Ride implements Serializable {
 		this.price = price;
 	}
 
-
-
-	public String toString(){
-		return rideNumber+";"+";"+from+";"+to+";"+date;  
+	public String toString() {
+		return rideNumber + ";" + ";" + fromCity + ";" + toCity + ";" + date;
 	}
 
-
-
-
-	
 }

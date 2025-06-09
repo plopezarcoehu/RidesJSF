@@ -42,11 +42,28 @@
     <navigation-case>
         <from-outcome>create</from-outcome>
         <to-view-id>/CreateRide.xhtml</to-view-id>
+		<redirect/>
     </navigation-case>
     <navigation-case>
         <from-outcome>query</from-outcome>
         <to-view-id>/QueryRides.xhtml</to-view-id>
+        <redirect/>
     </navigation-case>
 </navigation-rule>
-
+<navigation-rule>
+    <from-view-id>/QueryRides.xhtml</from-view-id>
+    <navigation-case>
+        <from-outcome>index</from-outcome>
+        <to-view-id>/Index.xhtml</to-view-id>
+        <redirect/>
+    </navigation-case>
+</navigation-rule>
+<navigation-rule>
+    <from-view-id>/CreateRide.xhtml</from-view-id>
+    <navigation-case>
+        <from-outcome>index</from-outcome>
+        <to-view-id>/Index.xhtml</to-view-id>
+        <redirect/>
+    </navigation-case>
+</navigation-rule>
 </faces-config>

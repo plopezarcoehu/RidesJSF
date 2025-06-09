@@ -107,11 +107,16 @@ public class HibernateDataAccess {
 
 			driver3.addRide("Bilbo", "Donostia", UtilDate.newDate(year, month, 14), 1, 3);
 
+			
+			
 			db.save(driver1);
 			db.save(driver2);
 			db.save(driver3);
-
+			
+			
+			//db.save(r1);
 			tx.commit();
+			//Ride r1 = createRide("Malaga", "Bilbo",UtilDate.newDate(year, month, 15), 4, 7, driver1.getEmail());
 			System.out.println("Database initialized with Hibernate");
 
 		} catch (Exception e) {
@@ -133,7 +138,7 @@ public class HibernateDataAccess {
 		Transaction tx = null;
 		try {
 			tx = db.beginTransaction();
-			List<String> cities = db.createQuery("SELECT DISTINCT r.from FROM Ride r ORDER BY r.from").list();
+			List<String> cities = db.createQuery("SELECT DISTINCT r.fromCity FROM Ride r ORDER BY r.fromCity").list();
 			tx.commit();
 			return cities;
 		} catch (Exception e) {
@@ -160,7 +165,7 @@ public class HibernateDataAccess {
 		try {
 			tx = db.beginTransaction();
 			List<String> arrivingCities = db
-					.createQuery("SELECT DISTINCT r.to FROM Ride r WHERE r.from=:fromParam ORDER BY r.to")
+					.createQuery("SELECT DISTINCT r.toCity FROM Ride r WHERE r.fromCity=:fromParam ORDER BY r.toCity")
 					.setParameter("fromParam", from).list();
 			tx.commit();
 			return arrivingCities;
@@ -256,7 +261,7 @@ public class HibernateDataAccess {
 		try {
 			tx = db.beginTransaction();
 			
-			Query query = db.createQuery("FROM Ride r WHERE r.from = :from AND r.to = :to AND r.date = :date");
+			Query query = db.createQuery("FROM Ride r WHERE r.fromCity = :from AND r.toCity = :to AND r.date = :date");
 			query.setParameter("from", from);
 			query.setParameter("to", to);
 			query.setParameter("date", date);
@@ -301,7 +306,7 @@ public class HibernateDataAccess {
 			Date lastDayMonthDate = UtilDate.lastDayMonth(date);
 
 			Query query = db.createQuery(
-					"SELECT DISTINCT r.date FROM Ride r WHERE r.from = :fromParam AND r.to = :toParam AND r.date BETWEEN :firstDay AND :lastDay");
+					"SELECT DISTINCT r.date FROM Ride r WHERE r.fromCity = :fromParam AND r.toCity = :toParam AND r.date BETWEEN :firstDay AND :lastDay");
 			query.setParameter("fromParam", from);
 			query.setParameter("toParam", to);
 			query.setParameter("firstDay", firstDayMonthDate);

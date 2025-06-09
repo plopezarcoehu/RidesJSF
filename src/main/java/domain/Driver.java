@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 
 @Entity
 @Table(name="driver")
@@ -21,7 +24,8 @@ public class Driver implements Serializable {
 	private String email;
 	private String name; 
 	
-	@OneToMany(mappedBy="driver",fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+	@OneToMany(targetEntity=Ride.class ,mappedBy="driver",fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@Fetch(value = FetchMode.SELECT)
 	private List<Ride> rides=new ArrayList<Ride>();
 
 	public Driver() {
@@ -79,7 +83,7 @@ public class Driver implements Serializable {
 	 */
 	public boolean doesRideExists(String from, String to, Date date)  {	
 		for (Ride r:rides)
-			if ( (java.util.Objects.equals(r.getFrom(),from)) && (java.util.Objects.equals(r.getTo(),to)) && (java.util.Objects.equals(r.getDate(),date)) )
+			if ( (java.util.Objects.equals(r.getFromCity(),from)) && (java.util.Objects.equals(r.getToCity(),to)) && (java.util.Objects.equals(r.getDate(),date)) )
 			 return true;
 		
 		return false;
@@ -105,7 +109,7 @@ public class Driver implements Serializable {
 		Ride r=null;
 		while (!found && index<=rides.size()) {
 			r=rides.get(++index);
-			if ( (java.util.Objects.equals(r.getFrom(),from)) && (java.util.Objects.equals(r.getTo(),to)) && (java.util.Objects.equals(r.getDate(),date)) )
+			if ( (java.util.Objects.equals(r.getFromCity(),from)) && (java.util.Objects.equals(r.getToCity(),to)) && (java.util.Objects.equals(r.getDate(),date)) )
 			found=true;
 		}
 			

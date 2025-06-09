@@ -59,6 +59,11 @@
 		<br />
 		<p:commandButton value="#{msg['CreateRide']}"
 			action="#{createBean.createRide}" update=":createRideForm" />
+		<h:messages style="color:blue;"/>
+	</h:form>
+	
+		<h:form>
+		<h:commandButton value="#{msg['Back']}" action="#{queryBean.index}" />
 
 	</h:form>
 </h:body>

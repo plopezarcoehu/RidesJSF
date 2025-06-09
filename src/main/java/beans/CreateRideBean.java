@@ -149,4 +149,8 @@ public class CreateRideBean implements Serializable {
 		FacesMessage message = new FacesMessage(mensaje);
 		context.addMessage(null, message);
 	}
+	
+	public String index() {
+		return "index";
+	}
 }

@@ -136,5 +136,9 @@ public class QueryRidesBean implements Serializable {
 			}
 		}
 	}
+	
+	public String index() {
+		return "index";
+	}
 
 }
