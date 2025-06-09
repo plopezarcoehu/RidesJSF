@@ -14,13 +14,13 @@
 	 <property name="hibernate.connection.autocommit">false</property>
 	 <property name="hibernate.connection.pool_size">1</property>
 	 
-	 <property name="hibernate.hbm2ddl.auto">update</property>
+	 <property name="hibernate.hbm2ddl.auto">create</property>
 	 <property name="hibernate.current_session_context_class">thread</property>
 	
 	 <property name="hibernate.show_sql">true</property>
 	 <property name="hibernate.format_sql">true</property>
-	
-	 <mapping class="domeinua.Ride"/>
-	 <mapping class="domeinua.Driver"/>
+
+	 <mapping class="domain.Ride"/>
+	 <mapping class="domain.Driver"/>
 	</session-factory>
 </hibernate-configuration>

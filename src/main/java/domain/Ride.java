@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
+@Table(name="ride")
 public class Ride implements Serializable {
 
 	@Id 
@@ -19,10 +20,10 @@ public class Ride implements Serializable {
 	private float price;
 	
 	@ManyToOne
-	@JoinColumn(name = "driver_email", 
-    referencedColumnName = "email", 
-    nullable = false, 
-    foreignKey = @javax.persistence.ForeignKey(name = "FK_RIDE_DRIVER")) 
+    @JoinColumn(name = "driver_email",
+                referencedColumnName = "email",
+                nullable = false,
+                foreignKey = @javax.persistence.ForeignKey(name = "FK_RIDE_DRIVER"))
 	private Driver driver;  
 	
 	public Ride(){
@@ -147,7 +148,7 @@ public class Ride implements Serializable {
 	 * @param  nPlaces places to be set
 	 */
 
-	public void setBetMinimum(int nPlaces) {
+	public void setnPlaces(int nPlaces) {
 		this.nPlaces = nPlaces;
 	}
 

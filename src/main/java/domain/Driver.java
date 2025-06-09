@@ -6,12 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 
-@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
+@Table(name="driver")
 public class Driver implements Serializable {
 	
 	/**
@@ -20,9 +18,9 @@ public class Driver implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String email;
 	private String name; 
+	
 	@OneToMany(mappedBy="driver",fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
 	private List<Ride> rides=new ArrayList<Ride>();
 

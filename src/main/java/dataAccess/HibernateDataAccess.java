@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.dialect.MySQLDialect;
 
 import configuration.UtilDate;
 import domain.Driver;
@@ -35,7 +36,13 @@ public class HibernateDataAccess {
 
 	public void open() {
 		try {
-			sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+			Configuration configuration = new Configuration();
+            configuration.configure("hibernate.cfg.xml");
+            String hbm2ddlAuto = configuration.getProperty("hibernate.hbm2ddl.auto");
+            System.out.println("Hibernate hbm2ddl.auto property: " + hbm2ddlAuto);
+
+            sessionFactory = configuration.buildSessionFactory();
+			
 			db = sessionFactory.openSession();
 			System.out.println("DataAccess sortuta => Hibernate cfg erabiliz");
 		} catch (Throwable ex) {
@@ -191,7 +198,7 @@ public class HibernateDataAccess {
 		try {
 			if (new Date().compareTo(date) > 0) {
 				throw new RideMustBeLaterThanTodayException(
-						ResourceBundle.getBundle("Etiquetas").getString("ErrorRideMustBeLaterThanToday"));
+						ResourceBundle.getBundle("msg").getString("ErrorRideMustBeLaterThanToday"));
 			}
 
 			tx = db.beginTransaction();
@@ -207,7 +214,7 @@ public class HibernateDataAccess {
 			if (driver.doesRideExists(from, to, date)) {
 				tx.rollback();
 				throw new RideAlreadyExistException(
-						ResourceBundle.getBundle("Etiquetas").getString("RideAlreadyExist"));
+						ResourceBundle.getBundle("msg").getString("RideAlreadyExist"));
 			}
 
 			Ride ride = driver.addRide(from, to, date, nPlaces, price);
