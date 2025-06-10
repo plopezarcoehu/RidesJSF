@@ -268,7 +268,7 @@ public class HibernateDataAccess {
 
 			List<Ride> rides = query.list();
 
-			List<Ride> result = new ArrayList<Ride>();
+			List<Ride> result = new ArrayList<>();
 			for (Ride ride : rides) {
 				result.add(ride);
 			}
