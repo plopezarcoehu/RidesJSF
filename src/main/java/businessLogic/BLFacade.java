@@ -51,8 +51,28 @@ public interface BLFacade  {
    public Ride createRide( String from, String to, Date date, int nPlaces, float price, String driverEmail) throws RideMustBeLaterThanTodayException, RideAlreadyExistException;
 	
    
+   
+   /**
+    * This method registers a new driver
+    * @param name of the driver
+    * @param email of the driver
+    * @param password of the driver
+    * 
+    * @return the created driver, or null, or an exception
+    * @throws DriverAlreadyExistsException if the email is already registered
+    */
    @WebMethod
    public Driver register(String name, String email, String password) throws DriverAlreadyExistsException;
+   
+   /**
+    * This method checks if login credentials are correct
+    * 
+    * @param email to login
+    * @param password to login
+    * @return the registered Driver, or null, or an exception
+    */
+   @WebMethod
+   public Driver login(String email, String password);
 	
 	/**
 	 * This method retrieves the rides from two locations on a given date 

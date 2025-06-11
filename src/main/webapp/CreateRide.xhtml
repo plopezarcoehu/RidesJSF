@@ -9,62 +9,65 @@
 	<title><h:outputText value="#{msg['CreateRide']}" /></title>
 </h:head>
 <h:body>
-	<f:view locale="#{localeBean.language}" />
+	<h:outputStylesheet library="css" name="login.css" />
+		<f:view locale="#{localeBean.language}" />
 
-	<h1>
-		<h:outputText value="#{msg['CreateRide']}" />
-	</h1>
+		<h1>
+			<h:outputText value="#{msg['CreateRide']}" />
+		</h1>
+		
+		<h:outputLabel value="#{createBean.setDriverEmail(loginBean.loggedInDriver.email)}" />
+		
+		<h:form id="createRideForm">
 
-	<h:form id="createRideForm">
+			<h:outputLabel for="departCity" value="#{msg['LeavingFrom']}:" />
+			<h:inputText id="departCity" value="#{createBean.departCity}"
+				required="true" requiredMessage="#{msg['ErrorQuery']}" />
+			<h:messages for="departCity" style="color:red;" />
+			<br />
 
-		<h:outputLabel for="departCity" value="#{msg['LeavingFrom']}:" />
-		<h:inputText id="departCity" value="#{createBean.departCity}"
-			required="true" requiredMessage="#{msg['ErrorQuery']}" />
-		<h:messages for="departCity" style="color:red;" />
-		<br />
+			<h:outputLabel for="destCity" value="#{msg['GoingTo']}:" />
+			<h:inputText id="destCity" value="#{createBean.destCity}"
+				required="true" requiredMessage="#{msg['ErrorQuery']}" />
+			<h:messages for="destCity" style="color:red;" />
+			<br />
 
-		<h:outputLabel for="destCity" value="#{msg['GoingTo']}:" />
-		<h:inputText id="destCity" value="#{createBean.destCity}"
-			required="true" requiredMessage="#{msg['ErrorQuery']}" />
-		<h:messages for="destCity" style="color:red;" />
-		<br />
+			<h:outputLabel for="nPlaces" value="#{msg['NumberOfSeats']}:" />
+			<h:inputText id="nPlaces" value="#{createBean.NPlaces}"
+				required="true" validator="#{createBean.validateNPlaces}"
+				requiredMessage="#{msg['ErrorQuery']}"
+				converterMessage="#{msg['ErrorNumber']}">
+				<h:messages for="nPlaces" style="color:red;" />
+			</h:inputText>
+			<br />
 
-		<h:outputLabel for="nPlaces" value="#{msg['NumberOfSeats']}:" />
-		<h:inputText id="nPlaces" value="#{createBean.NPlaces}"
-			required="true" validator="#{createBean.validateNPlaces}"
-			requiredMessage="#{msg['ErrorQuery']}"
-			converterMessage="#{msg['ErrorNumber']}">
-			<h:messages for="nPlaces" style="color:red;" />
-		</h:inputText>
-		<br />
+			<h:outputLabel for="price" value="#{msg['Price']}:" />
+			<h:inputText id="price" value="#{createBean.price}" required="true"
+				validator="#{createBean.validatePrice}"
+				requiredMessage="#{msg['ErrorQuery']}"
+				converterMessage="#{msg['ErrorNumber']}">
+				<h:messages for="price" style="color:red;" />
+			</h:inputText>
+			<br />
 
-		<h:outputLabel for="price" value="#{msg['Price']}:" />
-		<h:inputText id="price" value="#{createBean.price}" required="true"
-			validator="#{createBean.validatePrice}"
-			requiredMessage="#{msg['ErrorQuery']}"
-			converterMessage="#{msg['ErrorNumber']}">
-			<h:messages for="price" style="color:red;" />
-		</h:inputText>
-		<br />
+			<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
+			<p:calendar id="rideDate" value="#{createBean.rideDate}"
+				pattern="yyyy-MM-dd" required="true"
+				requiredMessage="#{msg['ErrorQuery']}" mode="inline"
+				validator="#{createBean.validateDate}">
+				<p:ajax event="dateSelect" process="@this" update="rideDate" />
+			</p:calendar>
+			<h:messages for="rideDate" style="color:red;" />
 
-		<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
-		<p:calendar id="rideDate" value="#{createBean.rideDate}"
-			pattern="yyyy-MM-dd" required="true"
-			requiredMessage="#{msg['ErrorQuery']}" mode="inline"
-			validator="#{createBean.validateDate}">
-			<p:ajax event="dateSelect" process="@this" update="rideDate" />
-		</p:calendar>
-		<h:messages for="rideDate" style="color:red;" />
+			<br />
+			<p:commandButton value="#{msg['CreateRide']}"
+				action="#{createBean.createRide}" update=":createRideForm" />
+			<h:messages style="color:blue;" />
+		</h:form>
 
-		<br />
-		<p:commandButton value="#{msg['CreateRide']}"
-			action="#{createBean.createRide}" update=":createRideForm" />
-		<h:messages style="color:blue;"/>
-	</h:form>
-	
 		<h:form>
-		<h:commandButton value="#{msg['Back']}" action="#{queryBean.index}" />
+			<h:commandButton value="#{msg['Back']}" action="#{queryBean.index}" />
 
-	</h:form>
+		</h:form>
 </h:body>
 </html>

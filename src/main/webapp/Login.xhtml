@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core">
-<f:view>
+<f:view locale="#{localeBean.language}">
 	<h:head>
 		<title><h:outputText value="#{msg['Login']}" /></title>
 	</h:head>
@@ -18,8 +18,8 @@
 		<h:form>
 			<table>
 				<tr>
-					<td><h:outputText value="#{msg['User']}" />:</td>
-					<td><h:inputText id="user" value="#{loginBean.user}"></h:inputText></td>
+					<td><h:outputText value="#{msg['Email']}" />:</td>
+					<td><h:inputText id="email" value="#{loginBean.email}"></h:inputText></td>
 				</tr>
 				<tr>
 					<td><h:outputText value="#{msg['Password']}" />:</td>
@@ -30,9 +30,11 @@
 				</tr>
 			</table>
 			<p>
-				<h:commandButton value="#{msg['Login']}" action="#{loginBean.login}" />
+				<h:commandButton value="#{msg['Login']}" action="#{loginBean.login}">
+					<f:ajax execute="email pass" render="globalMessages email pass" />
+				</h:commandButton>
 			</p>
-			<h:messages style="color:blue" />
+			<h:messages id="globalMessages" style="color:blue" />
 		</h:form>
 		<br />
 		<h:form>

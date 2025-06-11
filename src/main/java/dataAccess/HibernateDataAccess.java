@@ -26,9 +26,9 @@ public class HibernateDataAccess {
 
 	public HibernateDataAccess() {
 		open();
-        if (isDatabaseEmpty()) {
-            initializeDB();
-        }
+		if (isDatabaseEmpty()) {
+			initializeDB();
+		}
 	}
 
 	public HibernateDataAccess(Session session) {
@@ -38,12 +38,12 @@ public class HibernateDataAccess {
 	public void open() {
 		try {
 			Configuration configuration = new Configuration();
-            configuration.configure("hibernate.cfg.xml");
-            String hbm2ddlAuto = configuration.getProperty("hibernate.hbm2ddl.auto");
-            System.out.println("Hibernate hbm2ddl.auto property: " + hbm2ddlAuto);
+			configuration.configure("hibernate.cfg.xml");
+			String hbm2ddlAuto = configuration.getProperty("hibernate.hbm2ddl.auto");
+			System.out.println("Hibernate hbm2ddl.auto property: " + hbm2ddlAuto);
 
-            sessionFactory = configuration.buildSessionFactory();
-			
+			sessionFactory = configuration.buildSessionFactory();
+
 			db = sessionFactory.openSession();
 			System.out.println("DataAccess sortuta => Hibernate cfg erabiliz");
 		} catch (Throwable ex) {
@@ -64,20 +64,20 @@ public class HibernateDataAccess {
 	}
 
 	/**
-     * Check if database is empty (no drivers exist)
-     */
+	 * Check if database is empty (no drivers exist)
+	 */
 	private boolean isDatabaseEmpty() {
-        Session session = sessionFactory.openSession();
-        try {
-            Long count = (Long) session.createQuery("SELECT COUNT(*) FROM Driver").uniqueResult();
-            return count == 0;
-        } catch (Exception e) {
-            return true; 
-        } finally {
-            session.close();
-        }
-    }
-	
+		Session session = sessionFactory.openSession();
+		try {
+			Long count = (Long) session.createQuery("SELECT COUNT(*) FROM Driver").uniqueResult();
+			return count == 0;
+		} catch (Exception e) {
+			return true;
+		} finally {
+			session.close();
+		}
+	}
+
 	public void initializeDB() {
 		Session db = sessionFactory.openSession();
 		Transaction tx = null;
@@ -108,16 +108,14 @@ public class HibernateDataAccess {
 
 			driver3.addRide("Bilbo", "Donostia", UtilDate.newDate(year, month, 14), 1, 3);
 
-			
-			
 			db.save(driver1);
 			db.save(driver2);
 			db.save(driver3);
-			
-			
-			//db.save(r1);
+
+			// db.save(r1);
 			tx.commit();
-			//Ride r1 = createRide("Malaga", "Bilbo",UtilDate.newDate(year, month, 15), 4, 7, driver1.getEmail());
+			// Ride r1 = createRide("Malaga", "Bilbo",UtilDate.newDate(year, month, 15), 4,
+			// 7, driver1.getEmail());
 			System.out.println("Database initialized with Hibernate");
 
 		} catch (Exception e) {
@@ -149,8 +147,8 @@ public class HibernateDataAccess {
 			e.printStackTrace();
 			throw new RuntimeException("Errorea Depart Cities: " + e.getMessage(), e);
 		} finally {
-            db.close();
-        }
+			db.close();
+		}
 	}
 
 	/**
@@ -177,8 +175,8 @@ public class HibernateDataAccess {
 			e.printStackTrace();
 			throw new RuntimeException("Error retrieving arrival cities: " + e.getMessage(), e);
 		} finally {
-            db.close();
-        }
+			db.close();
+		}
 	}
 
 	/**
@@ -214,7 +212,7 @@ public class HibernateDataAccess {
 			if (driver == null) {
 				System.err.println("Driver with email " + driverEmail + " not found.");
 				tx.rollback();
-                return null;
+				return null;
 			}
 
 			if (driver.doesRideExists(from, to, date)) {
@@ -230,23 +228,23 @@ public class HibernateDataAccess {
 
 			return ride;
 		} catch (RideAlreadyExistException | RideMustBeLaterThanTodayException e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw e;
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-            throw new RuntimeException("Error creating ride: " + e.getMessage(), e);
-        } finally {
-            db.close();
-        }
+			if (tx != null && tx.isActive()) {
+				tx.rollback();
+			}
+			throw e;
+		} catch (Exception e) {
+			if (tx != null && tx.isActive()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+			throw new RuntimeException("Error creating ride: " + e.getMessage(), e);
+		} finally {
+			db.close();
+		}
 	}
-	
-	public Driver register(String name, String email, String password) throws DriverAlreadyExistsException{
-		System.out.println(">> DataAccess: register=> name= " + name + " email= " + email+ " password=" + password);
+
+	public Driver register(String name, String email, String password) throws DriverAlreadyExistsException {
+		System.out.println(">> DataAccess: register=> name= " + name + " email= " + email + " password=" + password);
 		Session db = sessionFactory.openSession();
 		Transaction tx = null;
 		try {
@@ -254,7 +252,7 @@ public class HibernateDataAccess {
 			tx = db.beginTransaction();
 
 			Driver driver = (Driver) db.get(Driver.class, email);
-			
+
 			if (driver != null) {
 				tx.rollback();
 				throw new DriverAlreadyExistsException();
@@ -269,19 +267,49 @@ public class HibernateDataAccess {
 
 			return newDriver;
 		} catch (DriverAlreadyExistsException e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw e;
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-            throw new RuntimeException("Error registering driver: " + e.getMessage(), e);
-        } finally {
-            db.close();
-        }
+			if (tx != null && tx.isActive()) {
+				tx.rollback();
+			}
+			throw e;
+		} catch (Exception e) {
+			if (tx != null && tx.isActive()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+			throw new RuntimeException("Error registering driver: " + e.getMessage(), e);
+		} finally {
+			db.close();
+		}
+	}
+
+	public Driver login(String email, String password) {
+		System.out.println(">> DataAccess: login=> email= " + email + " password=" + password);
+		Session db = sessionFactory.openSession();
+		Transaction tx = null;
+		Driver foundDriver = null;
+		try {
+			tx = db.beginTransaction();
+
+			foundDriver = (Driver) db.get(Driver.class, email);
+
+			if (foundDriver != null && foundDriver.getPassword() != null
+					&& foundDriver.getPassword().equals(password)) {
+				tx.commit();
+				return foundDriver;
+			} else {
+				tx.rollback();
+				return null;
+			}
+
+		} catch (Exception e) {
+			if (tx != null && tx.isActive()) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+			throw new RuntimeException("Error during login process: " + e.getMessage(), e);
+		} finally {
+			db.close();
+		}
 	}
 
 	/**
@@ -294,12 +322,12 @@ public class HibernateDataAccess {
 	 */
 	public List<Ride> getRides(String from, String to, Date date) {
 		System.out.println(">> DataAccess: getRides=> from= " + from + " to= " + to + " date " + date);
-		
+
 		Session db = sessionFactory.openSession();
-        Transaction tx = null;
+		Transaction tx = null;
 		try {
 			tx = db.beginTransaction();
-			
+
 			Query query = db.createQuery("FROM Ride r WHERE r.fromCity = :from AND r.toCity = :to AND r.date = :date");
 			query.setParameter("from", from);
 			query.setParameter("to", to);
@@ -321,8 +349,8 @@ public class HibernateDataAccess {
 			e.printStackTrace();
 			throw new RuntimeException("Error retrieving rides: " + e.getMessage(), e);
 		} finally {
-            db.close();
-        }
+			db.close();
+		}
 	}
 
 	/**
@@ -337,10 +365,10 @@ public class HibernateDataAccess {
 	public List<Date> getThisMonthDatesWithRides(String from, String to, Date date) {
 		System.out.println(">> DataAccess: getEventsMonth");
 		Session db = sessionFactory.openSession();
-        Transaction tx = null;
+		Transaction tx = null;
 		try {
 			tx = db.beginTransaction();
-			
+
 			Date firstDayMonthDate = UtilDate.firstDayMonth(date);
 			Date lastDayMonthDate = UtilDate.lastDayMonth(date);
 
@@ -360,8 +388,8 @@ public class HibernateDataAccess {
 			e.printStackTrace();
 			throw new RuntimeException("Error retrieving dates with rides: " + e.getMessage(), e);
 		} finally {
-            db.close();
-        }
+			db.close();
+		}
 	}
 
 }

@@ -123,5 +123,13 @@ public class BLFacadeImplementation implements BLFacade {
 		dbManager.close();
 		return d;
 	}
+	
+	@Override
+	public Driver login(String email, String password) {
+		dbManager.open();
+		Driver d = dbManager.login(email, password);
+		dbManager.close();
+		return d;
+	}
 
 }

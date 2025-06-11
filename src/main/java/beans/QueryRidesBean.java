@@ -1,7 +1,10 @@
 package beans;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import businessLogic.BLFacade;
@@ -17,6 +20,7 @@ import java.util.List;
 
 @ManagedBean(name = "queryBean")
 @SessionScoped
+
 public class QueryRidesBean implements Serializable {
 
 	private String departCity;
@@ -79,17 +83,19 @@ public class QueryRidesBean implements Serializable {
 		}
 		destCities = facadeBL.getDestinationCities(departCity);
 		System.out.println(destCities);
-		
+
 		if (destCities != null && !destCities.isEmpty()) {
 			destCity = destCities.get(0);
 			getDatesWithRides();
 		}
-		
+
 		return destCities;
+
 	}
 
 	public String getDatesWithRides() {
-		List<Date> dates;
+		List<Date> dates = null;
+		datesWithRides = new ArrayList<>();
 		if (departCity == null && !departCities.isEmpty()) {
 			departCity = departCities.get(0);
 		}
@@ -97,18 +103,19 @@ public class QueryRidesBean implements Serializable {
 			destCity = getDestCities().get(0);
 		}
 		dates = facadeBL.getThisMonthDatesWithRides(departCity, destCity, Calendar.getInstance().getTime());
-		if(dates == null) {
+		if (dates == null) {
 			datesWithRides.clear();
 			return null;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Collections.sort(dates);
-		datesWithRides = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 		for (Date d : dates) {
 			datesWithRides.add(sdf.format(d));
-		}	
-		
+		}
+
 		System.out.println("DATES: " + datesWithRides);
+
 		return String.join(",", datesWithRides);
 	}
 
@@ -136,7 +143,7 @@ public class QueryRidesBean implements Serializable {
 			}
 		}
 	}
-	
+
 	public String index() {
 		return "index";
 	}

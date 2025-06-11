@@ -6,122 +6,70 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<title><h:outputText value="#{msg['FindRides']}" /></title>
-	<style>
-.available-ride-date {
-	background-color: #28a745 !important;
-	color: white !important;
-	font-weight: bold;
-}
-</style>
 </h:head>
 <h:body>
 	<f:view locale="#{localeBean.language}" />
-	<h1>
-		<h:outputText value="#{msg['QueryRides']}" />
-	</h1>
+	<h:outputStylesheet library="css" name="login.css" />
+		<h1>
+			<h:outputText value="#{msg['QueryRides']}" />
+		</h1>
 
-	<h:form id="rideForm">
+		<h:form id="rideForm">
 
-		<h:outputLabel for="departureCity" value="#{msg['LeavingFrom']}:" />
-		<h:selectOneMenu id="departureCity" value="#{queryBean.departCity}"
-			required="true">
-			<f:selectItems value="#{queryBean.departCities}" />
-			<f:ajax event="change" listener="#{queryBean.onDepartCityChange}"
-				render="arrivalCity datesWithRides :rideForm:ridesTable" />
-		</h:selectOneMenu>
+			<h:outputLabel for="departureCity" value="#{msg['LeavingFrom']}:" />
+			<h:selectOneMenu id="departureCity" value="#{queryBean.departCity}"
+				required="true">
+				<f:selectItems value="#{queryBean.departCities}" />
+				<f:ajax event="change" listener="#{queryBean.onDepartCityChange}"
+					render="arrivalCity datesWithRides :rideForm:ridesTable" />
+			</h:selectOneMenu>
 
-		<br />
-		<h:outputLabel for="arrivalCity" value="#{msg['GoingTo']}:" />
-		<h:selectOneMenu id="arrivalCity" value="#{queryBean.destCity}"
-			required="true">
-			<f:selectItems value="#{queryBean.destCities}" />
-			<f:ajax event="change" listener="#{queryBean.findRidesListener}"
-				render=":rideForm:ridesTable datesWithRides" />
-		</h:selectOneMenu>
+			<br />
+			<h:outputLabel for="arrivalCity" value="#{msg['GoingTo']}:" />
+			<h:selectOneMenu id="arrivalCity" value="#{queryBean.destCity}"
+				required="true">
+				<f:selectItems value="#{queryBean.destCities}" />
+				<f:ajax event="change" listener="#{queryBean.findRidesListener}"
+					render=":rideForm:ridesTable datesWithRides" />
+			</h:selectOneMenu>
 
-		<br />
-		<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
+			<br />
+			<h:outputLabel for="rideDate" value="#{msg['RideDate']}:" />
 
-		<p:calendar id="rideDate" value="#{queryBean.rideDate}" mode="inline"
-			pattern="yyyy-MM-dd" onMonthChange="styleAvailableDates"
-			onYearChange="styleAvailableDates">
-			<p:ajax event="dateSelect" listener="#{queryBean.findRidesListener}"
-				update="ridesTable" process="@form" />
-		</p:calendar>
+			<p:calendar id="rideDate" value="#{queryBean.rideDate}" mode="inline"
+				pattern="yyyy-MM-dd" onMonthChange="styleAvailableDates"
+				onYearChange="styleAvailableDates">
+				<p:ajax event="dateSelect" listener="#{queryBean.findRidesListener}"
+					update="ridesTable" process="@form" />
+			</p:calendar>
 
-		<h:outputText id="datesWithRides" value="#{queryBean.datesWithRides}" />
-
-
-		<p:dataTable id="ridesTable" value="#{queryBean.rides}" var="ride"
-			rendered="true" emptyMessage="#{msg['NoRides']}"
-			locale="#{localeBean.language}">
-			<p:column headerText="#{msg['Driver']}">
-				<h:outputText value="#{ride.driver.name}" />
-			</p:column>
-			<p:column headerText="#{msg['Price']}">
-				<h:outputText value="#{ride.price}" />
-			</p:column>
-			<p:column headerText="#{msg['NPlaces']}">
-				<h:outputText value="#{ride.nPlaces}" />
-			</p:column>
-		</p:dataTable>
-
-
-		<h:messages globalOnly="false" layout="table" style="color:red;" />
-
-
-	</h:form>
-
-	<h:form>
-		<h:commandButton value="#{msg['Back']}" action="#{queryBean.index}" />
-
-	</h:form>
-</h:body>
-<h:outputScript>
-$(document).ready(function() {
-    styleAvailableDates();
-});
-
-    function styleAvailableDates() {
-	    var availableDates = #{ queryBean.datesWithRides };
-		
-	    $('.ui-datepicker-calendar td').each(function () {
-	    	
-	        var $cell = $(this);
-	        
-	        
-	        var day = $cell.text();
-	        var currentMonth = $('.ui-datepicker-month').text();
-	        var currentYear = $('.ui-datepicker-year').text();
-	        var dateStr = currentYear + '-' + getMonth(currentMonth) + '-' + day.padStart(2, '0');
+			<br/>
 			
-			console.log(dateStr);
-	        if (availableDates.includes(dateStr)) {
-	        	console.log("ESTA SI");
-	            $cell.addClass('available-ride-date');
-	        }
-	    });
-	    return [true, '', ''];
-	}
-	
-	function getMonth(month){
-	const months = {
-        "january": '01',
-        "february": '02',
-        "march": '03',
-        "april": '04',
-        "may": '05',
-        "june": '06',
-        "july": '07',
-        "august": '08',
-        "september": '09',
-        "october": '10',
-        "november": '11',
-        "december": '12'
-    };
+			<h:outputText value="#{msg['DaysWithRides']}"/>
+			<h:outputText style="color:blue" id="datesWithRides" value="#{queryBean.datesWithRides}" />
 
-    if (!month) return null;
-    return months[month.toLowerCase()] || null;
-    }
-</h:outputScript>
+			<br />
+			<p:dataTable id="ridesTable" value="#{queryBean.rides}" var="ride"
+				rendered="true" emptyMessage="#{msg['NoRides']}"
+				locale="#{localeBean.language}">
+				<p:column headerText="#{msg['Driver']}">
+					<h:outputText value="#{ride.driver.name}" />
+				</p:column>
+				<p:column headerText="#{msg['Price']}">
+					<h:outputText value="#{ride.price}" />
+				</p:column>
+				<p:column headerText="#{msg['NPlaces']}">
+					<h:outputText value="#{ride.nPlaces}" />
+				</p:column>
+			</p:dataTable>
+
+			<h:messages globalOnly="false" layout="table" style="color:red;" />
+
+		</h:form>
+
+		<h:form>
+			<h:commandButton value="#{msg['Back']}" action="#{queryBean.index}" />
+
+		</h:form>
+</h:body>
 </html>

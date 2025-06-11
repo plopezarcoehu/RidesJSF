@@ -39,7 +39,7 @@ body {
 </h:head>
 <h:body>
 	<f:view locale="#{localeBean.language}" />
-
+	<h:panelGroup rendered="#{loginBean.loggedIn}">
 	<div class="panel">
 		<div class="title">
 			<h:outputText value="#{msg['SelectOption']}" />
@@ -70,5 +70,10 @@ body {
 			</h:form>
 		</div>
 	</div>
+	</h:panelGroup>
+	<h:panelGroup rendered="#{!loginBean.loggedIn}">
+        <h:outputText value="#{msg['NotLogged']}" />
+        <h:link value="#{msg['LoginHere']}" outcome="/Login.xhtml" />
+    </h:panelGroup>
 </h:body>
 </html>

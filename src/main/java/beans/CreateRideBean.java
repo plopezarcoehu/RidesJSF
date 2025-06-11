@@ -26,7 +26,9 @@ public class CreateRideBean implements Serializable {
 	private Integer nPlaces;
 	private Float price;
 	private Date rideDate;
-
+	
+	private String driverEmail;
+	
 	private BLFacade facadeBL;
 
 	public CreateRideBean() {
@@ -73,10 +75,19 @@ public class CreateRideBean implements Serializable {
 	public void setRideDate(Date rideDate) {
 		this.rideDate = rideDate;
 	}
+	
+
+	public String getDriverEmail() {
+		return driverEmail;
+	}
+
+	public void setDriverEmail(String driverEmail) {
+		this.driverEmail = driverEmail;
+	}
 
 	public void createRide() {
 		try {
-			Ride r = facadeBL.createRide(departCity, destCity, rideDate, nPlaces, price, "driver1@gmail.com");
+			Ride r = facadeBL.createRide(departCity, destCity, rideDate, nPlaces, price, driverEmail);
 			if (r != null) {
 				addGlobalMessage("RideCreated");
 			}else {
@@ -153,4 +164,5 @@ public class CreateRideBean implements Serializable {
 	public String index() {
 		return "index";
 	}
+
 }
