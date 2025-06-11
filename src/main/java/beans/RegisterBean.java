@@ -6,6 +6,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import businessLogic.BLFacade;
+import configuration.MessageHelper;
 import domain.Driver;
 import domain.Ride;
 import exceptions.DriverAlreadyExistsException;
@@ -62,37 +63,38 @@ public class RegisterBean implements Serializable {
 
 	public String register() {
 		FacesContext context = FacesContext.getCurrentInstance();
-
+		
+		String error = "ErrorQuery";
 		if (name == null || name.trim().isEmpty()) {
 			context.addMessage("regUser",
-					new FacesMessage(getMessage("ErrorQuery")));
+					new FacesMessage(MessageHelper.getMessage(error)));
 			return null;
 		}
 		if (email == null || email.trim().isEmpty()) {
 			context.addMessage("regEmail",
-					new FacesMessage(getMessage("ErrorQuery")));
+					new FacesMessage(MessageHelper.getMessage(error)));
 			return null;
 		}
 		if (password == null || password.trim().isEmpty()) {
 			context.addMessage("regPass",
-					new FacesMessage(getMessage("ErrorQuery")));
+					new FacesMessage(MessageHelper.getMessage(error)));
 			return null;
 		}
 		if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
 			context.addMessage("confirmPass",
-					new FacesMessage(getMessage("ErrorQuery")));
+					new FacesMessage(MessageHelper.getMessage(error)));
 			return null;
 		}
 
 		if (!password.equals(confirmPassword)) {
 			context.addMessage("regPass",
-					new FacesMessage(getMessage("ErrorPassword")));
+					new FacesMessage(MessageHelper.getMessage("ErrorPassword")));
 			return null;
 		}
 
 		if (!email.contains("@") || !email.contains(".")) {
 			context.addMessage("regEmail",
-					new FacesMessage(getMessage("ErrorEmail")));
+					new FacesMessage(MessageHelper.getMessage("ErrorEmail")));
 			return null;
 		}
 	
@@ -101,23 +103,17 @@ public class RegisterBean implements Serializable {
 			driver = facadeBL.register(name, email, password);
 			if (driver != null) {
 				context.addMessage(null,
-						new FacesMessage(getMessage("SuccessRegister")));
+						new FacesMessage(MessageHelper.getMessage("SuccessRegister")));
 			}
 		} catch (DriverAlreadyExistsException e) {
 			context.addMessage(null,
-					new FacesMessage(getMessage("ErrorExistEmail")));
+					new FacesMessage(MessageHelper.getMessage("ErrorExistEmail")));
 			e.printStackTrace();
 		}
 
 		clearForm();
 
 		return null;
-	}
-	
-	private String getMessage(String key) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceBundle bundle = context.getApplication().getResourceBundle(context, "msg");
-		return bundle.getString(key);
 	}
 
 	private void clearForm() {

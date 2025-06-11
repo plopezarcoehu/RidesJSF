@@ -6,6 +6,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import businessLogic.BLFacade;
+import configuration.MessageHelper;
 import domain.Driver;
 import exceptions.DriverAlreadyExistsException;
 
@@ -26,8 +27,6 @@ public class LoginBean implements Serializable {
 
 	public LoginBean() {
 		facadeBL = FacadeBean.getBusinessLogic();
-		FacesContext.getCurrentInstance().getExternalContext().getFlash()
-        .put("logged", false);
 	}
 
 	public String getEmail() {
@@ -66,16 +65,16 @@ public class LoginBean implements Serializable {
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		if (email == null || email.trim().isEmpty()) {
-			context.addMessage("user", new FacesMessage(getMessage("ErrorQuery")));
+			context.addMessage("user", new FacesMessage(MessageHelper.getMessage("ErrorQuery")));
 			return null;
 		}
 		if (password == null || password.trim().isEmpty()) {
-			context.addMessage("regPass", new FacesMessage(getMessage("ErrorQuery")));
+			context.addMessage("regPass", new FacesMessage(MessageHelper.getMessage("ErrorQuery")));
 			return null;
 		}
 
 		if (!email.contains("@") || !email.contains(".")) {
-			context.addMessage("regEmail", new FacesMessage(getMessage("ErrorEmail")));
+			context.addMessage("regEmail", new FacesMessage(MessageHelper.getMessage("ErrorEmail")));
 			return null;
 		}
 
@@ -88,18 +87,14 @@ public class LoginBean implements Serializable {
 
 				email = null;
 				password = null;
-				
-				FacesContext.getCurrentInstance().getExternalContext().getFlash()
-                .put("logged", true);
-				
 				return "index";
 			} else {
 				this.loggedInDriver = null;
 				this.loggedIn = false;
-				context.addMessage(null, new FacesMessage(getMessage("ErrorLogin")));
+				context.addMessage(null, new FacesMessage(MessageHelper.getMessage("ErrorLogin")));
 			}
 		} catch (Exception e) {
-			context.addMessage(null, new FacesMessage(getMessage("ErrorLogin")));
+			context.addMessage(null, new FacesMessage(MessageHelper.getMessage("ErrorLogin")));
 			e.printStackTrace();
 		}
 		return null;
@@ -107,16 +102,9 @@ public class LoginBean implements Serializable {
 
 	public String logout() {
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		FacesContext.getCurrentInstance().getExternalContext().getFlash()
-        .put("logged", false);
 		
 		return "/Login.xhtml?faces-redirect=true";
 	}
 
-	private String getMessage(String key) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceBundle bundle = context.getApplication().getResourceBundle(context, "msg");
-		return bundle.getString(key);
-	}
 
 }

@@ -9,6 +9,7 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 
 import businessLogic.BLFacade;
+import configuration.MessageHelper;
 import domain.Ride;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
@@ -89,15 +90,15 @@ public class CreateRideBean implements Serializable {
 		try {
 			Ride r = facadeBL.createRide(departCity, destCity, rideDate, nPlaces, price, driverEmail);
 			if (r != null) {
-				addGlobalMessage("RideCreated");
+				MessageHelper.addGlobalMessage("RideCreated");
 			}else {
-				addGlobalMessage("ErrorQuery");
+				MessageHelper.addGlobalMessage("ErrorQuery");
 			}
 			System.out.println("NEW RIDE: " + r);
 		} catch (RideAlreadyExistException e) {
-			addGlobalMessage("RideAlreadyExist");
+			MessageHelper.addGlobalMessage("RideAlreadyExist");
 		} catch (RideMustBeLaterThanTodayException e) {
-			addGlobalMessage("ErrorRideMustBeLaterThanToday");
+			MessageHelper.addGlobalMessage("ErrorRideMustBeLaterThanToday");
 		}
 	}
 
@@ -106,14 +107,14 @@ public class CreateRideBean implements Serializable {
 		if (places != null) {
 			if (places <= 0) {
 				((UIInput) comp).setValid(false);
-				FacesMessage message = new FacesMessage(getMessage("SeatsMustBeGreaterThan0"));
+				FacesMessage message = new FacesMessage(MessageHelper.getMessage("SeatsMustBeGreaterThan0"));
 				context.addMessage(comp.getClientId(context), message);
 			} else {
 				nPlaces = places;
 			}
 		} else {
 			((UIInput) comp).setValid(false);
-			FacesMessage message = new FacesMessage(getMessage("ErrorNumber"));
+			FacesMessage message = new FacesMessage(MessageHelper.getMessage("ErrorNumber"));
 			context.addMessage(comp.getClientId(context), message);
 		}
 	}
@@ -123,14 +124,14 @@ public class CreateRideBean implements Serializable {
 		if (p != null) {
 			if (p <= 0) {
 				((UIInput) comp).setValid(false);
-				FacesMessage message = new FacesMessage(getMessage("PriceMustBeGreaterThan0"));
+				FacesMessage message = new FacesMessage(MessageHelper.getMessage("PriceMustBeGreaterThan0"));
 				context.addMessage(comp.getClientId(context), message);
 			} else {
 				price = p;
 			}
 		} else {
 			((UIInput) comp).setValid(false);
-			FacesMessage message = new FacesMessage(getMessage("ErrorNumber"));
+			FacesMessage message = new FacesMessage(MessageHelper.getMessage("ErrorNumber"));
 			context.addMessage(comp.getClientId(context), message);
 		}
 	}
@@ -140,25 +141,12 @@ public class CreateRideBean implements Serializable {
 		if (d != null) {
 			if (d.before(new Date())) {
 				((UIInput) comp).setValid(false);
-				FacesMessage message = new FacesMessage(getMessage("ErrorRideMustBeLaterThanToday"));
+				FacesMessage message = new FacesMessage(MessageHelper.getMessage("ErrorRideMustBeLaterThanToday"));
 				context.addMessage(comp.getClientId(context), message);
 			} else {
 				rideDate = d;
 			}
 		}
-	}
-
-	private String getMessage(String key) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ResourceBundle bundle = context.getApplication().getResourceBundle(context, "msg");
-		return bundle.getString(key);
-	}
-
-	private void addGlobalMessage(String messageKey) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		String mensaje = getMessage(messageKey);
-		FacesMessage message = new FacesMessage(mensaje);
-		context.addMessage(null, message);
 	}
 	
 	public String index() {
