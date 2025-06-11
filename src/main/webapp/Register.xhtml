@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<f:view>
+	<h:head>
+		<title><h:outputText value="#{msg['AppName']}" /> - <h:outputText
+				value="#{msg['Register']}" /></title>
+	</h:head>
+	<h:body>
+		<h:outputStylesheet library="css" name="login.css" />
+		<h1>
+			<h:outputText value="#{msg['AppName']}" />
+			-
+			<h:outputText value="#{msg['Register']}" />
+		</h1>
+		<h:form>
+			<table>
+				<tr>
+					<td><h:outputText value="#{msg['User']}" />:</td>
+					<td><h:inputText id="regUser" value="#{registerBean.name}"></h:inputText></td>
+					<td><h:message for="regUser" style="color:red" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Email" />:</td>
+					<td><h:inputText id="regEmail" value="#{registerBean.email}"></h:inputText></td>
+					<td><h:message for="regEmail" style="color:red" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{msg['Password']}" />:</td>
+					<td><h:inputSecret id="regPass" redisplay="true"
+							value="#{registerBean.password}">
+						</h:inputSecret></td>
+					<td><h:message for="regPass" style="color:red" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{msg['RepeatPassword']}" />:</td>
+					<td><h:inputSecret id="confirmPass" redisplay="true"
+							value="#{registerBean.confirmPassword}">
+						</h:inputSecret></td>
+					<td><h:message for="confirmPass" style="color:red" /></td>
+				</tr>
+			</table>
+			<p>
+				<h:commandButton value="#{msg['Register']}"
+					action="#{registerBean.register}" />
+			</p>
+			<h:messages style="color:red" />
+		</h:form>
+		<br />
+		<h:form>
+			<h:commandLink action="login" value="#{msg['Login']}" />
+		</h:form>
+		<div class="lang">
+			<h:form>
+				<h:selectOneRadio value="#{localeBean.language}" onchange="submit()">
+					<f:selectItem itemLabel="Euskara" itemValue="eu" />
+					<f:selectItem itemLabel="Castellano" itemValue="es" />
+					<f:selectItem itemLabel="English" itemValue="en" />
+				</h:selectOneRadio>
+			</h:form>
+		</div>
+	</h:body>
+</f:view>
+</html>

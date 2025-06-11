@@ -3,9 +3,11 @@ package businessLogic;
 import java.util.Date;
 import java.util.List;
 
+import domain.Driver;
 //import domain.Booking;
 import domain.Ride;
 import exceptions.RideMustBeLaterThanTodayException;
+import exceptions.DriverAlreadyExistsException;
 import exceptions.RideAlreadyExistException;
 
 import javax.jws.WebMethod;
@@ -48,6 +50,9 @@ public interface BLFacade  {
    @WebMethod
    public Ride createRide( String from, String to, Date date, int nPlaces, float price, String driverEmail) throws RideMustBeLaterThanTodayException, RideAlreadyExistException;
 	
+   
+   @WebMethod
+   public Driver register(String name, String email, String password) throws DriverAlreadyExistsException;
 	
 	/**
 	 * This method retrieves the rides from two locations on a given date 

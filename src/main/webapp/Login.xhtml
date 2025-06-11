@@ -6,38 +6,47 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <f:view>
 	<h:head>
-		<title>JavaServer Faces aplikazioa</title>
+		<title><h:outputText value="#{msg['Login']}" /></title>
 	</h:head>
 	<h:body>
+		<h:outputStylesheet library="css" name="login.css" />
+		<h1>
+			<h:outputText value="#{msg['AppName']}" />
+			-
+			<h:outputText value="#{msg['Login']}" />
+		</h1>
 		<h:form>
-			<h3>Mesedez, sartu izena eta pasahitza (1 eta 500-en arteko
-				zenbakia)</h3>
 			<table>
 				<tr>
-					<td>Izena:</td>
-					<td><h:inputText id="izen" value="#{login.izena}"></h:inputText></td>
+					<td><h:outputText value="#{msg['User']}" />:</td>
+					<td><h:inputText id="user" value="#{loginBean.user}"></h:inputText></td>
 				</tr>
 				<tr>
-					<td>Pasahitza:</td>
+					<td><h:outputText value="#{msg['Password']}" />:</td>
 					<td><h:inputSecret id="pass" redisplay="true"
-							value="#{login.pasahitza}">
-							<f:validateLongRange minimum="1" maximum="500" />
+							value="#{loginBean.password}">
 						</h:inputSecret></td>
 					<td><h:message for="pass" style="color:red" /></td>
 				</tr>
-				<tr>
-					<td>Data (yyyy/MM/dd):</td>
-					<td><h:inputText id="data" value="#{login.data}">
-							<f:convertDateTime pattern="yyyy/MM/dd" />
-						</h:inputText></td>
-					<td><h:message for="data" style="color:red" /></td>
-				</tr>
 			</table>
 			<p>
-				<h:commandButton value="Onartu" action="#{login.egiaztatu}" />
+				<h:commandButton value="#{msg['Login']}" action="#{loginBean.login}" />
 			</p>
 			<h:messages style="color:blue" />
 		</h:form>
+		<br />
+		<h:form>
+			<h:commandLink action="register" value="#{msg['Register']}" />
+		</h:form>
+		<div class="lang">
+			<h:form>
+				<h:selectOneRadio value="#{localeBean.language}" onchange="submit()">
+					<f:selectItem itemLabel="Euskara" itemValue="eu" />
+					<f:selectItem itemLabel="Castellano" itemValue="es" />
+					<f:selectItem itemLabel="English" itemValue="en" />
+				</h:selectOneRadio>
+			</h:form>
+		</div>
 	</h:body>
 </f:view>
 </html>

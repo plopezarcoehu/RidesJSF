@@ -4,31 +4,37 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.io.Serializable;
 
-@ManagedBean(name = "login")
+@ManagedBean(name = "loginBean")
 @SessionScoped
 public class LoginBean implements Serializable {
-	private String izena;
-	private String pasahitza;
+	private String user;
+	private String password;
 
-	public String getIzena() {
-		return izena;
+
+	public String getUser() {
+		return user;
 	}
 
-	public void setIzena(String izena) {
-		this.izena = izena;
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 
-	public String getPasahitza() {
-		return pasahitza;
+
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPasahitza(String pasahitza) {
-		this.pasahitza = pasahitza;
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String egiaztatu() {
-		if (izena.equals("pirata"))
-			return "error";
-		return "ok";
+
+	public String login() {
+		if (user.equals("user") && password.equals("1234"))
+			return "index";
+		return null;
 	}
+
 }

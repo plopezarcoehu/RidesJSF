@@ -16,6 +16,7 @@ import org.hibernate.dialect.MySQLDialect;
 import configuration.UtilDate;
 import domain.Driver;
 import domain.Ride;
+import exceptions.DriverAlreadyExistsException;
 import exceptions.RideAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
@@ -218,8 +219,7 @@ public class HibernateDataAccess {
 
 			if (driver.doesRideExists(from, to, date)) {
 				tx.rollback();
-				throw new RideAlreadyExistException(
-						ResourceBundle.getBundle("msg").getString("RideAlreadyExist"));
+				throw new RideAlreadyExistException();
 			}
 
 			Ride ride = driver.addRide(from, to, date, nPlaces, price);
@@ -233,13 +233,52 @@ public class HibernateDataAccess {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
-            throw e; // Re-throw business exceptions
+            throw e;
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
             }
             e.printStackTrace();
             throw new RuntimeException("Error creating ride: " + e.getMessage(), e);
+        } finally {
+            db.close();
+        }
+	}
+	
+	public Driver register(String name, String email, String password) throws DriverAlreadyExistsException{
+		System.out.println(">> DataAccess: register=> name= " + name + " email= " + email+ " password=" + password);
+		Session db = sessionFactory.openSession();
+		Transaction tx = null;
+		try {
+
+			tx = db.beginTransaction();
+
+			Driver driver = (Driver) db.get(Driver.class, email);
+			
+			if (driver != null) {
+				tx.rollback();
+				throw new DriverAlreadyExistsException();
+			}
+
+			Driver newDriver = new Driver(email, name);
+			newDriver.setPassword(password);
+
+			db.save(newDriver);
+
+			tx.commit();
+
+			return newDriver;
+		} catch (DriverAlreadyExistsException e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+            throw new RuntimeException("Error registering driver: " + e.getMessage(), e);
         } finally {
             db.close();
         }

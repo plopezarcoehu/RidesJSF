@@ -22,6 +22,7 @@ public class Driver implements Serializable {
 	@Id
 	private String email;
 	private String name;
+	private String password;
 
 	@OneToMany(targetEntity = Ride.class, mappedBy = "driver", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@Fetch(value = FetchMode.SELECT)
@@ -51,7 +52,16 @@ public class Driver implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
 	public String toString() {
 		return email + ";" + name + rides;
 	}
