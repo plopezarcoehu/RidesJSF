@@ -24,11 +24,11 @@ public class QueryRidesBean implements Serializable {
 	private String destCity;
 	private Date rideDate;
 
-	private BLFacade facadeBL;
+	private transient BLFacade facadeBL;
 
 	private List<String> departCities;
 	private List<String> destCities;
-	private List<String> datesWithRides;
+	
 	private List<Ride> rides;
 
 	public QueryRidesBean() {
@@ -91,6 +91,7 @@ public class QueryRidesBean implements Serializable {
 	}
 
 	public String getDatesWithRides() {
+  List<String> datesWithRides;
 		List<Date> dates = null;
 		datesWithRides = new ArrayList<>();
 		if (departCity == null && !departCities.isEmpty()) {

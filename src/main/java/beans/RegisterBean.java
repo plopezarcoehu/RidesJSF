@@ -23,7 +23,7 @@ public class RegisterBean implements Serializable {
 	private String password;
 	private String confirmPassword;
 	
-	private BLFacade facadeBL;
+	private transient BLFacade facadeBL;
 	
 	public RegisterBean() {
 		facadeBL = FacadeBean.getBusinessLogic();
@@ -62,57 +62,79 @@ public class RegisterBean implements Serializable {
 	}
 
 	public String register() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		
-		String error = "ErrorQuery";
-		if (name == null || name.trim().isEmpty()) {
-			context.addMessage("regUser",
-					new FacesMessage(MessageHelper.getMessage(error)));
-			return null;
-		}
-		if (email == null || email.trim().isEmpty()) {
-			context.addMessage("regEmail",
-					new FacesMessage(MessageHelper.getMessage(error)));
-			return null;
-		}
-		if (password == null || password.trim().isEmpty()) {
-			context.addMessage("regPass",
-					new FacesMessage(MessageHelper.getMessage(error)));
-			return null;
-		}
-		if (confirmPassword == null || confirmPassword.trim().isEmpty()) {
-			context.addMessage("confirmPass",
-					new FacesMessage(MessageHelper.getMessage(error)));
-			return null;
-		}
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    
+	    if (validateInputs(context)) {
 
-		if (!password.equals(confirmPassword)) {
-			context.addMessage("regPass",
-					new FacesMessage(MessageHelper.getMessage("ErrorPassword")));
-			return null;
-		}
+	        performRegistration(context);
+	        
+	        clearForm();
+	    }
+	    
+	    return null;
+	}
 
-		if (!email.contains("@") || !email.contains(".")) {
-			context.addMessage("regEmail",
-					new FacesMessage(MessageHelper.getMessage("ErrorEmail")));
-			return null;
-		}
-	
-		Driver driver;
-		try {
-			driver = facadeBL.register(name, email, password);
-			if (driver != null) {
-				context.addMessage(null,
-						new FacesMessage(MessageHelper.getMessage("SuccessRegister")));
-			}
-		} catch (DriverAlreadyExistsException e) {
-			context.addMessage(null,
-					new FacesMessage(MessageHelper.getMessage("ErrorExistEmail")));
-		}
+	private boolean validateInputs(FacesContext context) {
+	    String errorQuery = "ErrorQuery";
 
-		clearForm();
+	    if (isNullOrEmpty(name)) {
+	        addErrorMessage(context, "regUser", errorQuery);
+	        return false;
+	    }
 
-		return null;
+	    if (isNullOrEmpty(email)) {
+	        addErrorMessage(context, "regEmail", errorQuery);
+	        return false;
+	    }
+
+	    if (!isValidEmailFormat(email)) {
+	        addErrorMessage(context, "regEmail", "ErrorEmail");
+	        return false;
+	    }
+
+	    if (isNullOrEmpty(password)) {
+	        addErrorMessage(context, "regPass", errorQuery);
+	        return false;
+	    }
+
+	    if (isNullOrEmpty(confirmPassword)) {
+	        addErrorMessage(context, "confirmPass", errorQuery);
+	        return false;
+	    }
+	    
+	    if (!password.equals(confirmPassword)) {
+	        addErrorMessage(context, "regPass", "ErrorPassword");
+	        return false;
+	    }
+	    
+	    return true;
+	}
+
+	private void performRegistration(FacesContext context) {
+	    try {
+	        Driver driver = facadeBL.register(name, email, password);
+	        if (driver != null) {
+	            addSuccessMessage(context, null, "SuccessRegister");
+	        }
+	    } catch (DriverAlreadyExistsException e) {
+	        addErrorMessage(context, null, "ErrorExistEmail");
+	    }
+	}
+
+	private boolean isNullOrEmpty(String value) {
+	    return value == null || value.trim().isEmpty();
+	}
+
+	private boolean isValidEmailFormat(String email) {
+	    return email.contains("@") && email.contains(".");
+	}
+
+	private void addErrorMessage(FacesContext context, String componentId, String messageKey) {
+	    context.addMessage(componentId, new FacesMessage(MessageHelper.getMessage(messageKey)));
+	}
+
+	private void addSuccessMessage(FacesContext context, String componentId, String messageKey) {
+	    context.addMessage(componentId, new FacesMessage(MessageHelper.getMessage(messageKey)));
 	}
 
 	private void clearForm() {

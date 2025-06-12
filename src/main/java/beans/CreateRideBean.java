@@ -30,7 +30,7 @@ public class CreateRideBean implements Serializable {
 	
 	private String driverEmail;
 	
-	private BLFacade facadeBL;
+	private transient BLFacade facadeBL;
 
 	public CreateRideBean() {
 		facadeBL = FacadeBean.getBusinessLogic();

@@ -23,7 +23,7 @@ public class LoginBean implements Serializable {
 	private Driver loggedInDriver;
 	private boolean loggedIn;
 
-	private BLFacade facadeBL;
+	private transient BLFacade facadeBL;
 
 	public LoginBean() {
 		facadeBL = FacadeBean.getBusinessLogic();
