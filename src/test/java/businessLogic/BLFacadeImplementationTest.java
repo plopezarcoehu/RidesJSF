@@ -5,8 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith; 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner; 
+import org.mockito.junit.MockitoJUnitRunner;
 
+import configuration.UtilDate;
 import dataAccess.HibernateDataAccess; 
 import domain.Driver;
 import domain.Ride;
@@ -26,7 +27,6 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BLFacadeImplementationTest {
-
 
     @Mock
     private HibernateDataAccess mockDbManager; 
@@ -207,9 +207,144 @@ public class BLFacadeImplementationTest {
         verify(mockDbManager, times(1)).getArrivalCities(fromCity);
         verify(mockDbManager, times(1)).close();
         verifyNoMoreInteractions(mockDbManager);
+    }    
+    
+    @Test
+    public void testGetRides_Successful() {
+        String fromCity = "Donostia";
+        String toCity = "Bilbo";
+        Calendar today = Calendar.getInstance();
+		int month = today.get(Calendar.MONTH);
+		int year = today.get(Calendar.YEAR);
+		if (month == 12) {
+			month = 1;
+			year += 1;
+		}
+        Date testDate = UtilDate.newDate(year, month, 15);
+
+        Driver driver1 = new Driver("driver1@gmail.com", "Aitor Fernandez");
+		Driver driver2 = new Driver("driver2@gmail.com", "Ane Gaztañaga");
+        
+        Ride ride1 = new Ride(fromCity, toCity, testDate, 4, 7, driver1);
+        Ride ride2 = new Ride(fromCity, toCity, testDate, 3, 3, driver2);
+        List<Ride> expectedRides = Arrays.asList(ride1, ride2);
+
+        when(mockDbManager.getRides(fromCity, toCity, testDate)).thenReturn(expectedRides);
+
+        List<Ride> actualRides = blFacade.getRides(fromCity, toCity, testDate);
+
+        assertNotNull("The returned list of rides should not be null.", actualRides);
+        assertEquals("The returned list of rides should match the expected list.", expectedRides, actualRides);
+        assertEquals("The returned list should have the correct number of rides.", expectedRides.size(), actualRides.size());
+
+        verify(mockDbManager, times(1)).open();
+        verify(mockDbManager, times(1)).getRides(fromCity, toCity, testDate);
+        verify(mockDbManager, times(1)).close();
+        verifyNoMoreInteractions(mockDbManager);
+    }
+
+    @Test
+    public void testGetRides_EmptyList() {
+        String fromCity = "Unknown";
+        String toCity = "Destination";
+        Date testDate = new Date();
+        List<Ride> expectedRides = Collections.emptyList();
+
+        when(mockDbManager.getRides(fromCity, toCity, testDate)).thenReturn(expectedRides);
+
+        List<Ride> actualRides = blFacade.getRides(fromCity, toCity, testDate);
+
+        assertNotNull("The returned list of rides should not be null even if empty.", actualRides);
+        assertTrue("The returned list of rides should be empty.", actualRides.isEmpty());
+
+        verify(mockDbManager, times(1)).open();
+        verify(mockDbManager, times(1)).getRides(fromCity, toCity, testDate);
+        verify(mockDbManager, times(1)).close();
+        verifyNoMoreInteractions(mockDbManager);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetRides_DataAccessError() {
+        String fromCity = "AnyFrom";
+        String toCity = "AnyTo";
+        Date testDate = new Date();
+
+        when(mockDbManager.getRides(fromCity, toCity, testDate)).thenThrow(new RuntimeException("DB error during getRides"));
+
+        blFacade.getRides(fromCity, toCity, testDate);
+
+        verify(mockDbManager, times(1)).open();
+        verify(mockDbManager, times(1)).getRides(fromCity, toCity, testDate);
+        verify(mockDbManager, times(1)).close();
+        verifyNoMoreInteractions(mockDbManager);
     }
     
-    
+    @Test
+    public void testGetThisMonthDatesWithRides_Successful() {
+        String fromCity = "OriginCity";
+        String toCity = "DestCity";
+        Calendar today = Calendar.getInstance();
+		int month = today.get(Calendar.MONTH);
+		int year = today.get(Calendar.YEAR);
+		if (month == 12) {
+			month = 1;
+			year += 1;
+		}
+        Date testDate = UtilDate.newDate(year, month, 15);
+        List<Date> expectedDates = Arrays.asList(
+        		testDate
+        );
+
+        when(mockDbManager.getThisMonthDatesWithRides(fromCity, toCity, testDate)).thenReturn(expectedDates);
+
+        List<Date> actualDates = blFacade.getThisMonthDatesWithRides(fromCity, toCity, testDate);
+
+        assertNotNull("The returned list of dates should not be null.", actualDates);
+        assertEquals("The returned list should match the expected dates.", expectedDates, actualDates);
+        assertEquals("The list size should be correct.", expectedDates.size(), actualDates.size());
+
+        verify(mockDbManager, times(1)).open();
+        verify(mockDbManager, times(1)).getThisMonthDatesWithRides(fromCity, toCity, testDate);
+        verify(mockDbManager, times(1)).close();
+        verifyNoMoreInteractions(mockDbManager);
+    }
+
+    @Test
+    public void testGetThisMonthDatesWithRides_EmptyList() {
+        String fromCity = "NoRidesFrom";
+        String toCity = "NoRidesTo";
+        Date queryDate = new Date();
+
+        List<Date> expectedDates = Collections.emptyList();
+        when(mockDbManager.getThisMonthDatesWithRides(fromCity, toCity, queryDate)).thenReturn(expectedDates);
+
+        List<Date> actualDates = blFacade.getThisMonthDatesWithRides(fromCity, toCity, queryDate);
+
+        assertNotNull("The returned list should not be null, even if empty.", actualDates);
+        assertTrue("The returned list should be empty.", actualDates.isEmpty());
+
+        verify(mockDbManager, times(1)).open();
+        verify(mockDbManager, times(1)).getThisMonthDatesWithRides(fromCity, toCity, queryDate);
+        verify(mockDbManager, times(1)).close();
+        verifyNoMoreInteractions(mockDbManager);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetThisMonthDatesWithRides_DataAccessError() {
+        String fromCity = "ErrorFrom";
+        String toCity = "ErrorTo";
+        Date queryDate = new Date();
+
+        when(mockDbManager.getThisMonthDatesWithRides(fromCity, toCity, queryDate))
+            .thenThrow(new RuntimeException("Simulated database connection error"));
+
+        blFacade.getThisMonthDatesWithRides(fromCity, toCity, queryDate);
+
+        verify(mockDbManager, times(1)).open();
+        verify(mockDbManager, times(1)).getThisMonthDatesWithRides(fromCity, toCity, queryDate);
+        verify(mockDbManager, times(1)).close();
+        verifyNoMoreInteractions(mockDbManager);
+    }
     
     @Test
     public void testLogin_Successful() {
@@ -218,8 +353,9 @@ public class BLFacadeImplementationTest {
         when(mockDbManager.login(testEmail, testPassword)).thenReturn(defaultRegisteredDriver);
 
         Driver actualDriver = blFacade.login(testEmail, testPassword);
-
-        assertEquals(defaultRegisteredDriver, actualDriver);
+        
+        assertEquals(testEmail, actualDriver.getEmail());
+        assertEquals(testPassword, actualDriver.getPassword());
 
         verify(mockDbManager, times(1)).open();
         verify(mockDbManager, times(1)).login(testEmail, testPassword);
