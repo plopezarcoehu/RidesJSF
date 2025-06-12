@@ -130,7 +130,7 @@ public class Ride implements Serializable {
 		this.date = date;
 	}
 
-	public float getnPlaces() {
+	public int getnPlaces() {
 		return nPlaces;
 	}
 
