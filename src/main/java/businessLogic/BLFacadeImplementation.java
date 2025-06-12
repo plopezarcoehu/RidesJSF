@@ -75,7 +75,7 @@ public class BLFacadeImplementation implements BLFacade {
 		Ride ride = dbManager.createRide(from, to, date, nPlaces, price, driverEmail);
 		dbManager.close();
 		return ride;
-	};
+	}
 
 	/**
 	 * {@inheritDoc}
