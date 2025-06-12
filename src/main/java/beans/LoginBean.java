@@ -95,7 +95,6 @@ public class LoginBean implements Serializable {
 			}
 		} catch (Exception e) {
 			context.addMessage(null, new FacesMessage(MessageHelper.getMessage("ErrorLogin")));
-			e.printStackTrace();
 		}
 		return null;
 	}

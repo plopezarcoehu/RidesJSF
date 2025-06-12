@@ -34,6 +34,10 @@ public class HibernateDataAccess {
 	public HibernateDataAccess(Session session) {
 		this.db = session;
 	}
+	
+	public HibernateDataAccess(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public void open() {
 		try {
@@ -66,7 +70,7 @@ public class HibernateDataAccess {
 	/**
 	 * Check if database is empty (no drivers exist)
 	 */
-	private boolean isDatabaseEmpty() {
+	boolean isDatabaseEmpty() {
 		Session session = sessionFactory.openSession();
 		try {
 			Long count = (Long) session.createQuery("SELECT COUNT(*) FROM Driver").uniqueResult();
@@ -121,7 +125,6 @@ public class HibernateDataAccess {
 		} catch (Exception e) {
 			if (tx != null)
 				tx.rollback();
-			e.printStackTrace();
 		} finally {
 			db.close();
 		}
@@ -144,7 +147,6 @@ public class HibernateDataAccess {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
 			}
-			e.printStackTrace();
 			throw new RuntimeException("Errorea Depart Cities: " + e.getMessage(), e);
 		} finally {
 			db.close();
@@ -172,7 +174,6 @@ public class HibernateDataAccess {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
 			}
-			e.printStackTrace();
 			throw new RuntimeException("Error retrieving arrival cities: " + e.getMessage(), e);
 		} finally {
 			db.close();
@@ -202,7 +203,7 @@ public class HibernateDataAccess {
 		try {
 			if (new Date().compareTo(date) > 0) {
 				throw new RideMustBeLaterThanTodayException(
-						ResourceBundle.getBundle("msg").getString("ErrorRideMustBeLaterThanToday"));
+						"Ride must be later than today");
 			}
 
 			tx = db.beginTransaction();
@@ -236,7 +237,6 @@ public class HibernateDataAccess {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
 			}
-			e.printStackTrace();
 			throw new RuntimeException("Error creating ride: " + e.getMessage(), e);
 		} finally {
 			db.close();
@@ -275,7 +275,6 @@ public class HibernateDataAccess {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
 			}
-			e.printStackTrace();
 			throw new RuntimeException("Error registering driver: " + e.getMessage(), e);
 		} finally {
 			db.close();
@@ -305,7 +304,6 @@ public class HibernateDataAccess {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
 			}
-			e.printStackTrace();
 			throw new RuntimeException("Error during login process: " + e.getMessage(), e);
 		} finally {
 			db.close();
@@ -346,7 +344,6 @@ public class HibernateDataAccess {
 			if (tx != null && tx.isActive()) {
 				tx.rollback();
 			}
-			e.printStackTrace();
 			throw new RuntimeException("Error retrieving rides: " + e.getMessage(), e);
 		} finally {
 			db.close();
@@ -385,7 +382,6 @@ public class HibernateDataAccess {
 			if (db.getTransaction() != null && db.getTransaction().isActive()) {
 				db.getTransaction().rollback();
 			}
-			e.printStackTrace();
 			throw new RuntimeException("Error retrieving dates with rides: " + e.getMessage(), e);
 		} finally {
 			db.close();

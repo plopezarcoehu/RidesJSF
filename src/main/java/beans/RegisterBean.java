@@ -108,7 +108,6 @@ public class RegisterBean implements Serializable {
 		} catch (DriverAlreadyExistsException e) {
 			context.addMessage(null,
 					new FacesMessage(MessageHelper.getMessage("ErrorExistEmail")));
-			e.printStackTrace();
 		}
 
 		clearForm();
